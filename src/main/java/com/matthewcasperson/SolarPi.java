@@ -24,7 +24,7 @@ public class SolarPi {
      * Anything higher than this value will result in a green display
      */
     private final int MAX_USAGE = 2500;
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
     private static final String CURRENT_OUTPUT_ELEMENT = "tr.tr1:nth-child(5) > td:nth-child(2)";
     private static final String SOLAR_USER = "SOLAR_USER";
     private static final String SOLAR_PASS = "SOLAR_PASS";
@@ -118,7 +118,7 @@ public class SolarPi {
             return IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
 
         } catch (final Exception ex) {
-            System.err.println(ex.toString());
+            System.err.println(DATE_FORMAT.format(new Date()) + " " + ex.toString());
             return "";
         }
     }
