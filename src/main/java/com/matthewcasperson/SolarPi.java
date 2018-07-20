@@ -21,9 +21,20 @@ public class SolarPi {
     }
 
     private void initialLedTest() {
-        red.pulse(1000);
-        yellow.pulse(1000);
-        green.pulse(1000);
+        red.high();
+        sleep(1000);
+        red.low();
+        sleep(1000);
+
+        yellow.high();
+        sleep(1000);
+        yellow.low();
+        sleep(1000);
+
+        green.high();
+        sleep(1000);
+        green.low();
+        sleep(1000);
     }
 
     private GpioPinDigitalOutput getPin(final Pin pin, final String name) {
