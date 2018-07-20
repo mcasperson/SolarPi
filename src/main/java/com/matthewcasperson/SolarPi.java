@@ -18,11 +18,17 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 public class SolarPi {
+    private static final String CURRENT_OUTPUT_ELEMENT = "tr.tr1:nth-child(5) > td:nth-child(2)";
+    private static final String SOLAR_USER = "SOLAR_USER";
+    private static final String SOLAR_PASS = "SOLAR_PASS";
+    private static final String SOLAR_URL = "SOLAR_URL";
+    private static final int REFRESH_PERIOD = 10000;
+    private static final int INITIAL_TEST_PERIOD = 1000;
+    private final int MAX_USAGE = 2500;
     private GpioController gpio;
     private GpioPinDigitalOutput red;
     private GpioPinDigitalOutput yellow;
     private GpioPinDigitalOutput green;
-    private final int MAX_USAGE = 2500;
 
     public static void main(final String[] args) {
         new SolarPi();
@@ -34,7 +40,7 @@ public class SolarPi {
 
         while (true) {
             setStatus(getWatts());
-            sleep(10000);
+            sleep(REFRESH_PERIOD);
         }
     }
 
@@ -47,12 +53,12 @@ public class SolarPi {
     }
 
     private void initialLedTest() {
-        red.pulse(1000, true);
-        yellow.pulse(1000, true);
-        green.pulse(1000, true);
+        red.pulse(INITIAL_TEST_PERIOD, true);
+        yellow.pulse(INITIAL_TEST_PERIOD, true);
+        green.pulse(INITIAL_TEST_PERIOD, true);
     }
 
-    private void setStatus(int watts) {
+    private void setStatus(final int watts) {
         green.low();
         yellow.low();
         red.low();
@@ -70,12 +76,13 @@ public class SolarPi {
 
     private int getWatts() {
         final String status = getSolarStatus();
+        final int value = NumberUtils.toInt(status.replaceAll("[^0-9]*", ""), -1);
         if  (status.endsWith("kW")) {
-            return NumberUtils.toInt(status.replaceAll("[^0-9]*", ""), -1) * 1000;
+            return value * 1000;
         }
 
         if  (status.endsWith("W")) {
-            return NumberUtils.toInt(status.replaceAll("[^0-9]*", ""), -1);
+            return value;
         }
 
         return -1;
@@ -90,19 +97,19 @@ public class SolarPi {
     private String getSolarStatus()  {
         try {
             final CredentialsProvider provider = new BasicCredentialsProvider();
-            final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(getConfigValue("SOLAR_USER"), getConfigValue("SOLAR_PASS"));
+            final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(getConfigValue(SOLAR_USER), getConfigValue(SOLAR_PASS));
             provider.setCredentials(AuthScope.ANY, credentials);
 
             final HttpClient client = HttpClientBuilder.create()
                     .setDefaultCredentialsProvider(provider)
                     .build();
 
-            final HttpResponse response = client.execute(new HttpGet(getConfigValue("SOLAR_URL")));
+            final HttpResponse response = client.execute(new HttpGet(getConfigValue(SOLAR_URL)));
 
             final String value = IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
 
             final Document doc = Jsoup.parse(value);
-            return doc.select("tr.tr1:nth-child(5) > td:nth-child(2)").text();
+            return doc.select(CURRENT_OUTPUT_ELEMENT).text();
         } catch (final IOException ex) {
             return "";
         }
@@ -116,7 +123,7 @@ public class SolarPi {
         }
     }
 
-    private String getConfigValue(String config) {
+    private String getConfigValue(final String config) {
         if (System.getProperty(config) != null) return System.getProperty(config);
         return System.getenv(config);
     }
