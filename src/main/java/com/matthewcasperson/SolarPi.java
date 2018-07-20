@@ -117,7 +117,7 @@ public class SolarPi {
             final HttpResponse response = client.execute(new HttpGet(getConfigValue(SOLAR_URL)));
             return IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
 
-        } catch (final IOException ex) {
+        } catch (final Exception ex) {
             return "";
         }
     }
