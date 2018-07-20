@@ -87,14 +87,14 @@ public class SolarPi {
     private String getSolarStatus()  {
         try {
             final CredentialsProvider provider = new BasicCredentialsProvider();
-            final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(System.getProperty("SOLAR_USER"), System.getProperty("SOLAR_PASS"));
+            final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(getConfigValue("SOLAR_USER"), getConfigValue("SOLAR_PASS"));
             provider.setCredentials(AuthScope.ANY, credentials);
 
             final HttpClient client = HttpClientBuilder.create()
                     .setDefaultCredentialsProvider(provider)
                     .build();
 
-            final HttpResponse response = client.execute(new HttpGet(System.getProperty("SOLAR_URL")));
+            final HttpResponse response = client.execute(new HttpGet(getConfigValue("SOLAR_URL")));
 
             final String value = IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
 
@@ -111,6 +111,11 @@ public class SolarPi {
         } catch (final InterruptedException e) {
             // ignored
         }
+    }
+
+    private String getConfigValue(String config) {
+        if (System.getProperty(config) != null) return System.getProperty(config);
+        return System.getenv(config);
     }
 }
 
