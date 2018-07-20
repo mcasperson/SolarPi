@@ -31,9 +31,9 @@ public class SolarPi {
     public SolarPi() {
         GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
         gpio = GpioFactory.getInstance();
-        red = getPin(RaspiBcmPin.GPIO_26, "Red");
+        red = getPin(RaspiBcmPin.GPIO_13, "Red");
         yellow = getPin(RaspiBcmPin.GPIO_19, "Yellow");
-        green = getPin(RaspiBcmPin.GPIO_13, "Green");
+        green = getPin(RaspiBcmPin.GPIO_26, "Green");
 
         initialLedTest();
 
