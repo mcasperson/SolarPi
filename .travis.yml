@@ -4,5 +4,6 @@ deploy:
   api_key:
     secure: hZLaUyuSwkY8sLgNaLwUCCJeB9D1YTtlJg0IGboCBv3UqBn3scVd1hfIZi2Pw/2kSMD5Ou+ad9pThbkheJlycly/n71Hu2YAkI3eckUnJJhF42hxc1+3p68afOWwxr79aSVw/7q1ambqOKij2VmqlRNQshnX+wyJmvbHEt/+ukkQfR1INGdB/xwM4Jn0b3j1Rb2Y1hLk10zJfzXKzP1GxyNpYyw2lZQ0V/pjs4udLPprPPIuOQWbbjUwGTWV4H0JU2hXxxD38ojbHx3NsxvnX1y9Z2V16tHJzxAIhPkQYuyGGLBgSruzgtfT2P8kNvKRb9TTiUI6C9BZVzgEQwqKKGexabq6+L44+yrgwQgpV78Se8H3lzfHzxirIlYxxrJMkx2CZxra4+VbNRUgetLqfnqGUN8zrGYnX+7xuS83mU6JBMUKUUPppa0CxkRtwPT3bB6l4PqKRigDsjQUD9+i2XAcXy9nuUj8Zdz+94mQ0UD1MwzbILzhRz0EP5UVawFwQik+edTvaxT70EnXvuov646AxcY25TZ4avBEiVAIuzMmK7Mh7Bn76Jz0Qp58YAO1nP6MEyE34y88nzb5HQgDHP7lx06Oq3pOyQdVfoceX/4iPUBU3eihxKDlt2dKb8NRige7NEQ6nxXso4tLLHTG0ZKl/LCn0grzUAjy4HdW0j4=
   file: target/solarpi-1.0-SNAPSHOT.jar
+  skip_cleanup: true
   on:
-    repo: mcasperson/SolarPi
+    tags: true
