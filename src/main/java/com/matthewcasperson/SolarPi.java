@@ -20,12 +20,14 @@ public class SolarPi {
         green = getPin(RaspiBcmPin.GPIO_13, "Green");
 
         initialLedTest();
+
+        System.exit(0);
     }
 
     private void initialLedTest() {
-        red.pulse(1000);
-        yellow.pulse(1000);
-        green.pulse(1000);
+        red.pulse(1000, true);
+        yellow.pulse(1000, true);
+        green.pulse(1000, true);
     }
 
     private GpioPinDigitalOutput getPin(final Pin pin, final String name) {
