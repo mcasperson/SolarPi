@@ -18,13 +18,16 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 public class SolarPi {
+    /**
+     * Anything higher than this value will result in a green display
+     */
+    private final int MAX_USAGE = 2500;
     private static final String CURRENT_OUTPUT_ELEMENT = "tr.tr1:nth-child(5) > td:nth-child(2)";
     private static final String SOLAR_USER = "SOLAR_USER";
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
     private static final int REFRESH_PERIOD = 10000;
     private static final int INITIAL_TEST_PERIOD = 1000;
-    private final int MAX_USAGE = 2500;
     private GpioController gpio;
     private GpioPinDigitalOutput red;
     private GpioPinDigitalOutput yellow;
@@ -75,13 +78,15 @@ public class SolarPi {
     }
 
     private int getWatts() {
-        final String status = getSolarStatus();
-        final int value = NumberUtils.toInt(status.replaceAll("[^0-9]*", ""), -1);
-        if  (status.endsWith("kW")) {
+        final String status = getSolarWebPage();
+        final String output = parseHtmlResult(status);
+
+        final int value = NumberUtils.toInt(output.replaceAll("[^0-9]*", ""), -1);
+        if  (output.endsWith("kW")) {
             return value * 1000;
         }
 
-        if  (status.endsWith("W")) {
+        if  (output.endsWith("W")) {
             return value;
         }
 
@@ -94,7 +99,7 @@ public class SolarPi {
         return gpioPin;
     }
 
-    private String getSolarStatus()  {
+    private String getSolarWebPage()  {
         try {
             final CredentialsProvider provider = new BasicCredentialsProvider();
             final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(getConfigValue(SOLAR_USER), getConfigValue(SOLAR_PASS));
@@ -105,14 +110,16 @@ public class SolarPi {
                     .build();
 
             final HttpResponse response = client.execute(new HttpGet(getConfigValue(SOLAR_URL)));
+            return IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
 
-            final String value = IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
-
-            final Document doc = Jsoup.parse(value);
-            return doc.select(CURRENT_OUTPUT_ELEMENT).text();
         } catch (final IOException ex) {
             return "";
         }
+    }
+
+    private String parseHtmlResult(final String value) {
+        final Document doc = Jsoup.parse(value);
+        return doc.select(CURRENT_OUTPUT_ELEMENT).text();
     }
 
     private void sleep(final int milliseconds) {
