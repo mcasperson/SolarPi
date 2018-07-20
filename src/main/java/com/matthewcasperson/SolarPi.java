@@ -16,12 +16,15 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SolarPi {
     /**
      * Anything higher than this value will result in a green display
      */
     private final int MAX_USAGE = 2500;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm dd-MM-yyyy ");
     private static final String CURRENT_OUTPUT_ELEMENT = "tr.tr1:nth-child(5) > td:nth-child(2)";
     private static final String SOLAR_USER = "SOLAR_USER";
     private static final String SOLAR_PASS = "SOLAR_PASS";
@@ -62,6 +65,8 @@ public class SolarPi {
     }
 
     private void setStatus(final float watts) {
+        System.out.println(DATE_FORMAT.format(new Date()) + " Setting status to " + watts);
+
         green.low();
         yellow.low();
         red.low();
