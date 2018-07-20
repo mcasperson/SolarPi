@@ -118,6 +118,7 @@ public class SolarPi {
             return IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
 
         } catch (final Exception ex) {
+            System.err.println(ex.toString());
             return "";
         }
     }
