@@ -14,7 +14,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,6 +49,9 @@ public class SolarPi {
         }
     }
 
+    /**
+     * Build the pin objects.
+     */
     private void init() {
         GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
         gpio = GpioFactory.getInstance();
@@ -58,12 +60,22 @@ public class SolarPi {
         green = getPin(RaspiBcmPin.GPIO_26, "Green");
     }
 
+    /**
+     * A boot up sequence that cycles through the leds.
+     */
     private void initialLedTest() {
         red.pulse(INITIAL_TEST_PERIOD, true);
         yellow.pulse(INITIAL_TEST_PERIOD, true);
         green.pulse(INITIAL_TEST_PERIOD, true);
     }
 
+    /**
+     * Turns on the leds based on the solar output.
+     * Green = 100% or over
+     * Yellow = 50% to 100%
+     * Red = 0% to 50%
+     * @param watts The current solar output
+     */
     private void setStatus(final float watts) {
         System.out.println(DATE_FORMAT.format(new Date()) + " Setting status to " + watts);
 
@@ -82,6 +94,10 @@ public class SolarPi {
         }
     }
 
+    /**
+     * Query the solar web page, read the output HTML, and parse it.
+     * @return The solar output in watts
+     */
     private float getWatts() {
         final String status = getSolarWebPage();
         final String output = parseHtmlResult(status);
@@ -98,12 +114,22 @@ public class SolarPi {
         return -1;
     }
 
+    /**
+     * Build a pin object
+     * @param pin The pin number
+     * @param name The pin name
+     * @return The configured pin object
+     */
     private GpioPinDigitalOutput getPin(final Pin pin, final String name) {
         final GpioPinDigitalOutput gpioPin = gpio.provisionDigitalOutputPin(pin, name, PinState.LOW);
         gpioPin.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
         return gpioPin;
     }
 
+    /**
+     * Log into the solar web page and return the raw HTML
+     * @return The raw solar status page HTML
+     */
     private String getSolarWebPage()  {
         try {
             final CredentialsProvider provider = new BasicCredentialsProvider();
@@ -118,16 +144,29 @@ public class SolarPi {
             return IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
 
         } catch (final Exception ex) {
+            /*
+                Any issues with the HTTP request are logged, and we return a blank string.
+                This will result in the blinking red light display.
+             */
             System.err.println(DATE_FORMAT.format(new Date()) + " " + ex.toString());
             return "";
         }
     }
 
+    /**
+     * Extract the solar output from the raw HTML
+     * @param value The raw HTML
+     * @return The solar output
+     */
     private String parseHtmlResult(final String value) {
         final Document doc = Jsoup.parse(value);
-        return doc.select(CURRENT_OUTPUT_ELEMENT).text();
+        return doc.select(CURRENT_OUTPUT_ELEMENT).text().trim();
     }
 
+    /**
+     * A no-throw sleep method
+     * @param milliseconds How long to sleep for
+     */
     private void sleep(final int milliseconds) {
         try {
             Thread.sleep(milliseconds);
@@ -136,6 +175,11 @@ public class SolarPi {
         }
     }
 
+    /**
+     * A generic config value reader
+     * @param config The config name to read
+     * @return The config value
+     */
     private String getConfigValue(final String config) {
         if (System.getProperty(config) != null) return System.getProperty(config);
         return System.getenv(config);
