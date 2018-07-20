@@ -85,21 +85,20 @@ public class SolarPi {
 
     private String getSolarStatus()  {
         try {
-            CredentialsProvider provider = new BasicCredentialsProvider();
-            UsernamePasswordCredentials credentials
-                    = new UsernamePasswordCredentials(System.getenv("SOLAR_USER"), System.getenv("SOLAR_PASS"));
+            final CredentialsProvider provider = new BasicCredentialsProvider();
+            final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(System.getProperty("SOLAR_USER"), System.getProperty("SOLAR_PASS"));
             provider.setCredentials(AuthScope.ANY, credentials);
 
-            HttpClient client = HttpClientBuilder.create()
+            final HttpClient client = HttpClientBuilder.create()
                     .setDefaultCredentialsProvider(provider)
                     .build();
 
-            HttpResponse response = client.execute(
-                    new HttpGet(System.getenv("SOLAR_URL")));
+            final HttpResponse response = client.execute(
+                    new HttpGet(System.getProperty("SOLAR_URL")));
 
-            String value = IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
+            final String value = IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
 
-            Document doc = Jsoup.parse(value);
+            final Document doc = Jsoup.parse(value);
             return doc.select("tr.tr1:nth-child(5) > td:nth-child(2)").text();
         } catch (final IOException ex) {
             return "";
