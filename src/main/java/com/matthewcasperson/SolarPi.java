@@ -2,6 +2,7 @@ package com.matthewcasperson;
 
 import com.pi4j.io.gpio.*;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -24,7 +25,7 @@ public class SolarPi {
     private final int MAX_USAGE = 2500;
 
     public static void main(final String[] args) {
-        final SolarPi solarPi = new SolarPi();
+        new SolarPi();
     }
 
     public SolarPi() {
@@ -67,11 +68,11 @@ public class SolarPi {
     private int getWatts() {
         final String status = getSolarStatus();
         if  (status.endsWith("kW")) {
-            return Integer.parseInt(status.replaceAll("[^0-9]*", "")) * 1000;
+            return NumberUtils.toInt(status.replaceAll("[^0-9]*", ""), -1) * 1000;
         }
 
         if  (status.endsWith("W")) {
-            return Integer.parseInt(status.replaceAll("[^0-9]*", ""));
+            return NumberUtils.toInt(status.replaceAll("[^0-9]*", ""), -1);
         }
 
         return -1;
@@ -93,8 +94,7 @@ public class SolarPi {
                     .setDefaultCredentialsProvider(provider)
                     .build();
 
-            final HttpResponse response = client.execute(
-                    new HttpGet(System.getProperty("SOLAR_URL")));
+            final HttpResponse response = client.execute(new HttpGet(System.getProperty("SOLAR_URL")));
 
             final String value = IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
 
@@ -107,7 +107,7 @@ public class SolarPi {
 
     private void sleep(final int milliseconds) {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(milliseconds);
         } catch (final InterruptedException e) {
             // ignored
         }
