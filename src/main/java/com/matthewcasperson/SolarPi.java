@@ -61,7 +61,7 @@ public class SolarPi {
         green.pulse(INITIAL_TEST_PERIOD, true);
     }
 
-    private void setStatus(final int watts) {
+    private void setStatus(final float watts) {
         green.low();
         yellow.low();
         red.low();
@@ -77,11 +77,11 @@ public class SolarPi {
         }
     }
 
-    private int getWatts() {
+    private float getWatts() {
         final String status = getSolarWebPage();
         final String output = parseHtmlResult(status);
 
-        final int value = NumberUtils.toInt(output.replaceAll("[^0-9]*", ""), -1);
+        final float value = NumberUtils.toFloat(output.replaceAll("[^0-9.]*", ""), -1);
         if  (output.endsWith("kW")) {
             return value * 1000;
         }
