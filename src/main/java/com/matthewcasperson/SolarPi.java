@@ -18,10 +18,10 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 public class SolarPi {
-    private final GpioController gpio;
-    private final GpioPinDigitalOutput red;
-    private final GpioPinDigitalOutput yellow;
-    private final GpioPinDigitalOutput green;
+    private GpioController gpio;
+    private GpioPinDigitalOutput red;
+    private GpioPinDigitalOutput yellow;
+    private GpioPinDigitalOutput green;
     private final int MAX_USAGE = 2500;
 
     public static void main(final String[] args) {
@@ -29,18 +29,21 @@ public class SolarPi {
     }
 
     public SolarPi() {
-        GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
-        gpio = GpioFactory.getInstance();
-        red = getPin(RaspiBcmPin.GPIO_13, "Red");
-        yellow = getPin(RaspiBcmPin.GPIO_19, "Yellow");
-        green = getPin(RaspiBcmPin.GPIO_26, "Green");
-
+        init();
         initialLedTest();
 
         while (true) {
             setStatus(getWatts());
             sleep(10000);
         }
+    }
+
+    private void init() {
+        GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
+        gpio = GpioFactory.getInstance();
+        red = getPin(RaspiBcmPin.GPIO_13, "Red");
+        yellow = getPin(RaspiBcmPin.GPIO_19, "Yellow");
+        green = getPin(RaspiBcmPin.GPIO_26, "Green");
     }
 
     private void initialLedTest() {
