@@ -1,16 +1,21 @@
 package com.matthewcasperson;
 
 import com.pi4j.io.gpio.*;
+import com.sun.xml.internal.ws.api.server.HttpEndpoint;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -136,12 +141,18 @@ public class SolarPi {
             final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(getConfigValue(SOLAR_USER), getConfigValue(SOLAR_PASS));
             provider.setCredentials(AuthScope.ANY, credentials);
 
-            final HttpClient client = HttpClientBuilder.create()
+            try (final CloseableHttpClient client = HttpClientBuilder.create()
                     .setDefaultCredentialsProvider(provider)
-                    .build();
-
-            final HttpResponse response = client.execute(new HttpGet(getConfigValue(SOLAR_URL)));
-            return IOUtils.toString(response.getEntity().getContent(), Charset.forName("UTF-8"));
+                    .build()) {
+                try (final CloseableHttpResponse response = client.execute(new HttpGet(getConfigValue(SOLAR_URL)))) {
+                    final HttpEntity entity = response.getEntity();
+                    try {
+                        return IOUtils.toString(entity.getContent(), Charset.forName("UTF-8"));
+                    } finally {
+                        EntityUtils.consumeQuietly(entity);
+                    }
+                }
+            }
 
         } catch (final Exception ex) {
             /*
