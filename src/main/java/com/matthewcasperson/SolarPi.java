@@ -25,13 +25,13 @@ public class SolarPi {
      * Anything higher than this value will result in a green display
      */
     private static final int MAX_USAGE = 2500;
-    private static final int MAX_FAILURES = 6;
+    private static final int MAX_FAILURES = 3;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
     private static final String CURRENT_OUTPUT_ELEMENT = "tr.tr1:nth-child(5) > td:nth-child(2)";
     private static final String SOLAR_USER = "SOLAR_USER";
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
-    private static final int REFRESH_PERIOD = 10000;
+    private static final int REFRESH_PERIOD = 20000;
     private static final int INITIAL_TEST_PERIOD = 1000;
     private GpioController gpio;
     private GpioPinDigitalOutput red;
