@@ -24,7 +24,8 @@ public class SolarPi {
     /**
      * Anything higher than this value will result in a green display
      */
-    private final int MAX_USAGE = 2500;
+    private static final int MAX_USAGE = 2500;
+    private static final int MAX_FAILURES = 6;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
     private static final String CURRENT_OUTPUT_ELEMENT = "tr.tr1:nth-child(5) > td:nth-child(2)";
     private static final String SOLAR_USER = "SOLAR_USER";
@@ -36,6 +37,8 @@ public class SolarPi {
     private GpioPinDigitalOutput red;
     private GpioPinDigitalOutput yellow;
     private GpioPinDigitalOutput green;
+
+    private int failureCount = 0;
 
     public static void main(final String[] args) {
         new SolarPi();
@@ -144,6 +147,8 @@ public class SolarPi {
                 try (final CloseableHttpResponse response = client.execute(new HttpGet(getConfigValue(SOLAR_URL)))) {
                     final HttpEntity entity = response.getEntity();
                     try {
+                        // all good, so reset the failure count
+                        failureCount = 0;
                         return IOUtils.toString(entity.getContent(), Charset.forName("UTF-8"));
                     } finally {
                         EntityUtils.consumeQuietly(entity);
@@ -152,6 +157,16 @@ public class SolarPi {
             }
 
         } catch (final Exception ex) {
+            /*
+                Successive failures will exit the application, and use supervisord to restart it
+             */
+            ++failureCount;
+            if (failureCount >= MAX_FAILURES) {
+
+                System.err.println(DATE_FORMAT.format(new Date()) + " Failure count exceeded, exiting");
+                System.exit(1);
+            }
+
             /*
                 Any issues with the HTTP request are logged, and we return a blank string.
                 This will result in the blinking red light display.
