@@ -84,9 +84,7 @@ public class SolarPi {
     private void setStatus(final float watts) {
         System.out.print(DATE_FORMAT.format(new Date()) + " Setting status to " + watts);
 
-        green.low();
-        yellow.low();
-        red.low();
+        resetPins();
 
         if (watts >= MAX_USAGE) {
             System.out.println(" (GREEN)");
@@ -101,6 +99,16 @@ public class SolarPi {
             System.out.println(" (ERROR)");
             red.blink(200);
         }
+    }
+
+    /**
+     * Reset the pins to their off state
+     */
+    private void resetPins() {
+        green.low();
+        yellow.low();
+        red.low();
+        red.blink(0);
     }
 
     /**
