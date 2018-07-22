@@ -82,19 +82,23 @@ public class SolarPi {
      * @param watts The current solar output
      */
     private void setStatus(final float watts) {
-        System.out.println(DATE_FORMAT.format(new Date()) + " Setting status to " + watts);
+        System.out.print(DATE_FORMAT.format(new Date()) + " Setting status to " + watts);
 
         green.low();
         yellow.low();
         red.low();
 
         if (watts >= MAX_USAGE) {
+            System.out.println(" (GREEN)");
             green.high();
         } else if (watts >= MAX_USAGE / 2 ) {
+            System.out.println(" (YELLOW)");
             yellow.high();
         } else if (watts >= 0) {
+            System.out.println(" (RED)");
             red.high();
         } else {
+            System.out.println(" (ERROR)");
             red.blink(200);
         }
     }
