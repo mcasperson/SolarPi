@@ -11,6 +11,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
@@ -155,6 +156,7 @@ public class SolarPi {
 
             try (final CloseableHttpClient client = HttpClientBuilder.create()
                     .setDefaultCredentialsProvider(provider)
+                    .setRetryHandler(new DefaultHttpRequestRetryHandler(3, true))
                     .build()) {
                 try (final CloseableHttpResponse response = client.execute(new HttpGet(getConfigValue(SOLAR_URL)))) {
                     final HttpEntity entity = response.getEntity();
