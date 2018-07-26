@@ -38,6 +38,12 @@ public class SolarPi {
     private int failureCount;
 
     public static void main(final String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                blinkt.exit();
+            }
+        });
+
         new SolarPi();
     }
 
