@@ -20,7 +20,7 @@ public class Blinkt {
     };
     private boolean clearOnExit = true;
     private GpioPinPwmOutput dat;
-    private GpioPinPwmOutput clk;
+    private GpioPinDigitalOutput clk;
 
     public void setClearOnExit(final boolean clearOnExit) {
         this.clearOnExit = clearOnExit;
@@ -28,8 +28,8 @@ public class Blinkt {
 
     public Blinkt() {
         GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
-        dat = getPin(RaspiBcmPin.GPIO_23, "DAT");
-        clk = getPin(RaspiBcmPin.GPIO_24, "CLK");
+        dat = getOtherPin(RaspiBcmPin.GPIO_23, "DAT");
+        clk = getDigitalPin(RaspiBcmPin.GPIO_24, "CLK");
     }
 
     public void exit() {
@@ -61,30 +61,30 @@ public class Blinkt {
     public void writeByte(int input) {
         for (int x =0; x < 8; ++x) {
             dat.setPwm(input & 0b10000000);
-            clk.setPwm(1);
+            clk.high();
             sleep(0, 500);
             input <<=1;
-            clk.setPwm(0);
+            clk.low();
             sleep(0, 500);
         }
     }
 
-    public void eof() {
+    private void eof() {
         dat.setPwm(0);
         for (int x = 0; x < 36; ++x) {
-            clk.setPwm(1);
+            clk.high();
             sleep(0, 500);
-            clk.setPwm(0);
+            clk.low();
             sleep(0, 500);
         }
     }
 
-    public void sof() {
+    private void sof() {
         dat.setPwm(0);
         for (int x = 0; x < 32; ++x) {
-            clk.setPwm(1);
+            clk.high();
             sleep(0, 500);
-            clk.setPwm(0);
+            clk.low();
             sleep(0, 500);
         }
     }
@@ -98,7 +98,7 @@ public class Blinkt {
             int b = pixel[2];
             int brightness = pixel[3];
 
-            writeByte((byte)(0b11100000 | brightness));
+            writeByte(0b11100000 | brightness);
             writeByte(b);
             writeByte(g);
             writeByte(r);
@@ -187,8 +187,20 @@ public class Blinkt {
      * @param name The pin name
      * @return The configured pin object
      */
-    private GpioPinPwmOutput getPin(final Pin pin, final String name) {
+    private GpioPinPwmOutput getOtherPin(final Pin pin, final String name) {
         final GpioPinPwmOutput gpioPin = gpio.provisionPwmOutputPin(pin, name, 0);
+        gpioPin.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
+        return gpioPin;
+    }
+
+    /**
+     * Build a pin object
+     * @param pin The pin number
+     * @param name The pin name
+     * @return The configured pin object
+     */
+    private GpioPinDigitalOutput getDigitalPin(final Pin pin, final String name) {
+        final GpioPinDigitalOutput gpioPin = gpio.provisionDigitalOutputPin(pin, name, PinState.LOW);
         gpioPin.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
         return gpioPin;
     }
