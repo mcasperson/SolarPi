@@ -11,7 +11,7 @@ public class Blinkt {
     private static final int BRIGHTNESS = 7;
     private static final GpioController gpio = GpioFactory.getInstance();
 
-    private int[][] pixels = new int[][] {
+    private final int[][] pixels = new int[][] {
             {0, 0, 0, BRIGHTNESS},
             {0, 0, 0, BRIGHTNESS},
             {0, 0, 0, BRIGHTNESS},
@@ -21,9 +21,9 @@ public class Blinkt {
             {0, 0, 0, BRIGHTNESS},
             {0, 0, 0, BRIGHTNESS}
     };
+    private final GpioPinDigitalOutput dat;
+    private final GpioPinDigitalOutput clk;
     private boolean clearOnExit = true;
-    private GpioPinDigitalOutput dat;
-    private GpioPinDigitalOutput clk;
 
     public void setClearOnExit(final boolean clearOnExit) {
         this.clearOnExit = clearOnExit;

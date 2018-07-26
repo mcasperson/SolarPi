@@ -32,7 +32,7 @@ public class SolarPi {
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
     private static final int REFRESH_PERIOD = 60000;
-    private static final int INITIAL_TEST_PERIOD = 100000;
+    private static final int INITIAL_TEST_PERIOD = 1000;
     private static final Blinkt blinkt = new Blinkt();
 
     private int failureCount;
@@ -56,24 +56,27 @@ public class SolarPi {
      * A boot up sequence that cycles through the leds.
      */
     private void initialLedTest() {
-        blinkt.clear();
-        blinkt.setPixel(0, 255 , 0, 0);
+
+        setAllLights(255 , 0, 0);
+        blinkt.show();
+        sleep(INITIAL_TEST_PERIOD);
+
+        setAllLights(0 , 255, 0);
+        blinkt.show();
+        sleep(INITIAL_TEST_PERIOD);
+
+        setAllLights(0 , 0, 255);
         blinkt.show();
         sleep(INITIAL_TEST_PERIOD);
 
         blinkt.clear();
-        blinkt.setPixel(0, 0 , 255, 0);
         blinkt.show();
-        sleep(INITIAL_TEST_PERIOD);
+    }
 
-        blinkt.clear();
-        blinkt.setPixel(0, 0 , 0, 255);
-        blinkt.show();
-        sleep(INITIAL_TEST_PERIOD);
-
-        blinkt.clear();
-        blinkt.setPixel(0, 0 , 0, 0);
-        blinkt.show();
+    private void setAllLights(int r, int g, int b) {
+        for (int i = 0; i < 8; ++i) {
+            blinkt.setPixel(i, r , g, b);
+        }
     }
 
     /**
@@ -88,15 +91,16 @@ public class SolarPi {
 
         if (watts >= MAX_USAGE) {
             System.out.println(" (GREEN)");
-            blinkt.setPixel(0, 0 , 255, 0, 31);
+            setAllLights(0 , 255, 0);
         } else if (watts >= MAX_USAGE / 2 ) {
             System.out.println(" (YELLOW)");
-            blinkt.setPixel(0, 255 , 255, 0, 31);
+            setAllLights(255 , 255, 0);
         } else if (watts >= 0) {
             System.out.println(" (RED)");
-            blinkt.setPixel(0, 255 , 0, 0, 31);
+            setAllLights(255 , 0, 0);
         } else {
             System.out.println(" (ERROR)");
+            setAllLights(255 , 0, 255);
         }
 
         blinkt.show();
