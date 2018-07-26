@@ -34,10 +34,7 @@ public class SolarPi {
     private static final String SOLAR_URL = "SOLAR_URL";
     private static final int REFRESH_PERIOD = 60000;
     private static final int INITIAL_TEST_PERIOD = 1000;
-    private GpioController gpio;
-    private GpioPinDigitalOutput red;
-    private GpioPinDigitalOutput yellow;
-    private GpioPinDigitalOutput green;
+    private Blinkt blinkt;
 
     private int failureCount = 0;
 
@@ -46,7 +43,9 @@ public class SolarPi {
     }
 
     public SolarPi() {
-        init();
+
+        blinkt = new Blinkt();
+
         initialLedTest();
 
         while (true) {
@@ -56,23 +55,23 @@ public class SolarPi {
     }
 
     /**
-     * Build the pin objects.
-     */
-    private void init() {
-        GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
-        gpio = GpioFactory.getInstance();
-        red = getPin(RaspiBcmPin.GPIO_13, "Red");
-        yellow = getPin(RaspiBcmPin.GPIO_19, "Yellow");
-        green = getPin(RaspiBcmPin.GPIO_26, "Green");
-    }
-
-    /**
      * A boot up sequence that cycles through the leds.
      */
     private void initialLedTest() {
-        red.pulse(INITIAL_TEST_PERIOD, true);
-        yellow.pulse(INITIAL_TEST_PERIOD, true);
-        green.pulse(INITIAL_TEST_PERIOD, true);
+        blinkt.setPixel(0, 255 , 0, 0, 31);
+        blinkt.show();
+        sleep(INITIAL_TEST_PERIOD);
+
+        blinkt.setPixel(0, 0 , 255, 0, 31);
+        blinkt.show();
+        sleep(INITIAL_TEST_PERIOD);
+
+        blinkt.setPixel(0, 0 , 0, 255, 31);
+        blinkt.show();
+        sleep(INITIAL_TEST_PERIOD);
+
+        blinkt.setPixel(0, 0 , 0, 0, 31);
+        blinkt.show();
     }
 
     /**
@@ -85,32 +84,22 @@ public class SolarPi {
     private void setStatus(final float watts) {
         System.out.print(DATE_FORMAT.format(new Date()) + " Setting status to " + watts);
 
-        resetPins();
-
         if (watts >= MAX_USAGE) {
             System.out.println(" (GREEN)");
-            green.high();
+            blinkt.setPixel(0, 0 , 255, 0, 31);
         } else if (watts >= MAX_USAGE / 2 ) {
             System.out.println(" (YELLOW)");
-            yellow.high();
+            blinkt.setPixel(0, 255 , 255, 0, 31);
         } else if (watts >= 0) {
             System.out.println(" (RED)");
-            red.high();
+            blinkt.setPixel(0, 255 , 0, 0, 31);
         } else {
             System.out.println(" (ERROR)");
-            red.blink(200);
         }
+
+        blinkt.show();
     }
 
-    /**
-     * Reset the pins to their off state
-     */
-    private void resetPins() {
-        green.low();
-        yellow.low();
-        red.low();
-        red.blink(0);
-    }
 
     /**
      * Query the solar web page, read the output HTML, and parse it.
@@ -130,18 +119,6 @@ public class SolarPi {
         }
 
         return -1;
-    }
-
-    /**
-     * Build a pin object
-     * @param pin The pin number
-     * @param name The pin name
-     * @return The configured pin object
-     */
-    private GpioPinDigitalOutput getPin(final Pin pin, final String name) {
-        final GpioPinDigitalOutput gpioPin = gpio.provisionDigitalOutputPin(pin, name, PinState.LOW);
-        gpioPin.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
-        return gpioPin;
     }
 
     /**
