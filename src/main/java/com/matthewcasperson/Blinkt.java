@@ -19,7 +19,7 @@ public class Blinkt {
             {0, 0, 0, BRIGHTNESS}
     };
     private boolean clearOnExit = true;
-    private GpioPinPwmOutput dat;
+    private GpioPinDigitalOutput dat;
     private GpioPinDigitalOutput clk;
 
     public void setClearOnExit(final boolean clearOnExit) {
@@ -28,7 +28,7 @@ public class Blinkt {
 
     public Blinkt() {
         GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
-        dat = getOtherPin(RaspiBcmPin.GPIO_23, "DAT");
+        dat = getDigitalPin(RaspiBcmPin.GPIO_23, "DAT");
         clk = getDigitalPin(RaspiBcmPin.GPIO_24, "CLK");
     }
 
@@ -60,7 +60,11 @@ public class Blinkt {
 
     public void writeByte(int input) {
         for (int x =0; x < 8; ++x) {
-            dat.setPwm(input & 0b10000000);
+            if ((input & 0b10000000) == 1) {
+                dat.high();
+            } else {
+                dat.low();
+            }
             clk.high();
             sleep(0, 500);
             input <<=1;
@@ -70,7 +74,7 @@ public class Blinkt {
     }
 
     private void eof() {
-        dat.setPwm(0);
+        dat.low();
         for (int x = 0; x < 36; ++x) {
             clk.high();
             sleep(0, 500);
@@ -80,7 +84,7 @@ public class Blinkt {
     }
 
     private void sof() {
-        dat.setPwm(0);
+        dat.low();
         for (int x = 0; x < 32; ++x) {
             clk.high();
             sleep(0, 500);
