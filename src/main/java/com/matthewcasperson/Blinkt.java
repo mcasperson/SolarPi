@@ -54,12 +54,14 @@ public class Blinkt {
 
     public void clear() {
         for (int x = 0; x < NUM_PIXELS; ++x) {
-            pixels[x] = new int[] {0, 0, 0};
+            pixels[x][0] = 0;
+            pixels[x][1] = 0;
+            pixels[x][2] = 0;
         }
     }
 
     public void writeByte(int input) {
-        for (int x =0; x < 8; ++x) {
+        for (int x = 0; x < 8; ++x) {
             if ((input & 0b10000000) == 0) {
                 dat.low();
             } else {
@@ -183,18 +185,6 @@ public class Blinkt {
         } catch (final InterruptedException e) {
             // ignored
         }
-    }
-
-    /**
-     * Build a pin object
-     * @param pin The pin number
-     * @param name The pin name
-     * @return The configured pin object
-     */
-    private GpioPinPwmOutput getOtherPin(final Pin pin, final String name) {
-        final GpioPinPwmOutput gpioPin = gpio.provisionPwmOutputPin(pin, name, 0);
-        gpioPin.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
-        return gpioPin;
     }
 
     /**

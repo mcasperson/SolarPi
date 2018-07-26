@@ -1,6 +1,5 @@
 package com.matthewcasperson;
 
-import com.pi4j.io.gpio.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpEntity;
@@ -34,7 +33,7 @@ public class SolarPi {
     private static final String SOLAR_URL = "SOLAR_URL";
     private static final int REFRESH_PERIOD = 60000;
     private static final int INITIAL_TEST_PERIOD = 100000;
-    private Blinkt blinkt;
+    private static Blinkt blinkt = new Blinkt();
 
     private int failureCount = 0;
 
@@ -43,8 +42,6 @@ public class SolarPi {
     }
 
     public SolarPi() {
-
-        blinkt = new Blinkt();
         blinkt.setBrightness(0.1f);
 
         initialLedTest();
