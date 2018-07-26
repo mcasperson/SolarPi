@@ -45,6 +45,7 @@ public class SolarPi {
     public SolarPi() {
 
         blinkt = new Blinkt();
+        blinkt.setBrightness(0.1f);
 
         initialLedTest();
 
@@ -59,22 +60,22 @@ public class SolarPi {
      */
     private void initialLedTest() {
         blinkt.clear();
-        blinkt.setPixel(0, 255 , 0, 0, 0.1f);
+        blinkt.setPixel(0, 255 , 0, 0);
         blinkt.show();
         sleep(INITIAL_TEST_PERIOD);
 
         blinkt.clear();
-        blinkt.setPixel(0, 0 , 255, 0, 0.1f);
+        blinkt.setPixel(0, 0 , 255, 0);
         blinkt.show();
         sleep(INITIAL_TEST_PERIOD);
 
         blinkt.clear();
-        blinkt.setPixel(0, 0 , 0, 255, 0.1f);
+        blinkt.setPixel(0, 0 , 0, 255);
         blinkt.show();
         sleep(INITIAL_TEST_PERIOD);
 
         blinkt.clear();
-        blinkt.setPixel(0, 0 , 0, 0, 0.1f);
+        blinkt.setPixel(0, 0 , 0, 0);
         blinkt.show();
     }
 

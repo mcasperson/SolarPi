@@ -157,6 +157,19 @@ public class Blinkt {
     }
 
     /**
+     * Set the RGB value, and optionally brightness, of a single pixel
+     * If you don't supply a brightness value, the last value will be kept.
+     */
+    public void setPixel(int x, int r, int g, int b) {
+        pixels[x] = new int[] {
+                r & 0xff,
+                g & 0xff,
+                b & 0xff,
+                pixels[x][3]
+        };
+    }
+
+    /**
      * A no-throw sleep method
      * @param milliseconds How long to sleep for
      */
