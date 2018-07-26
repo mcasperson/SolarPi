@@ -48,7 +48,7 @@ public class Blinkt {
         }
 
         for (int x = 0; x < NUM_PIXELS; ++x) {
-            pixels[x][3] = (byte)((int)(31.0 * brightness) & 0b11111);
+            pixels[x][3] = (int)(31.0 * brightness) & 0b11111;
         }
     }
 

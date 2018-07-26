@@ -58,19 +58,23 @@ public class SolarPi {
      * A boot up sequence that cycles through the leds.
      */
     private void initialLedTest() {
-        blinkt.setPixel(0, 255 , 0, 0, 31);
+        blinkt.clear();
+        blinkt.setPixel(0, 255 , 0, 0, 0.1f);
         blinkt.show();
         sleep(INITIAL_TEST_PERIOD);
 
-        blinkt.setPixel(0, 0 , 255, 0, 31);
+        blinkt.clear();
+        blinkt.setPixel(0, 0 , 255, 0, 0.1f);
         blinkt.show();
         sleep(INITIAL_TEST_PERIOD);
 
-        blinkt.setPixel(0, 0 , 0, 255, 31);
+        blinkt.clear();
+        blinkt.setPixel(0, 0 , 0, 255, 0.1f);
         blinkt.show();
         sleep(INITIAL_TEST_PERIOD);
 
-        blinkt.setPixel(0, 0 , 0, 0, 31);
+        blinkt.clear();
+        blinkt.setPixel(0, 0 , 0, 0, 0.1f);
         blinkt.show();
     }
 
