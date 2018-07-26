@@ -60,7 +60,7 @@ public class Blinkt {
 
     public void writeByte(int input) {
         for (int x =0; x < 8; ++x) {
-            if ((input & 0b10000000) == 1) {
+            if ((input & 0b10000000) == 0b10000000) {
                 dat.high();
             } else {
                 dat.low();
