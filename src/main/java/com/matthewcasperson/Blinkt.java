@@ -3,10 +3,13 @@ package com.matthewcasperson;
 import com.pi4j.io.gpio.*;
 
 public class Blinkt {
+    static {
+        GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
+    }
+
     private static final int NUM_PIXELS = 8;
     private static final int BRIGHTNESS = 7;
-
-    private final GpioController gpio = GpioFactory.getInstance();
+    private static final GpioController gpio = GpioFactory.getInstance();
 
     private int[][] pixels = new int[][] {
             {0, 0, 0, BRIGHTNESS},
@@ -27,7 +30,6 @@ public class Blinkt {
     }
 
     public Blinkt() {
-        GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
         dat = getDigitalPin(RaspiBcmPin.GPIO_23, "DAT");
         clk = getDigitalPin(RaspiBcmPin.GPIO_24, "CLK");
     }
@@ -60,7 +62,7 @@ public class Blinkt {
         }
     }
 
-    public void writeByte(int input) {
+    private void writeByte(int input) {
         for (int x = 0; x < 8; ++x) {
             if ((input & 0b10000000) == 0) {
                 dat.low();
