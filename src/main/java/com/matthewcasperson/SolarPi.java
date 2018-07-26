@@ -33,7 +33,7 @@ public class SolarPi {
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
     private static final int REFRESH_PERIOD = 60000;
-    private static final int INITIAL_TEST_PERIOD = 1000;
+    private static final int INITIAL_TEST_PERIOD = 100000;
     private Blinkt blinkt;
 
     private int failureCount = 0;
