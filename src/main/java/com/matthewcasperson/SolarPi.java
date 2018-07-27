@@ -6,6 +6,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCredentialsProvider;
@@ -33,6 +34,7 @@ public class SolarPi {
     private static final String SOLAR_URL = "SOLAR_URL";
     private static final int REFRESH_PERIOD = 60000;
     private static final int INITIAL_TEST_PERIOD = 1000;
+    public static final int TIMEOUT = 5;
     private static final Blinkt blinkt = new Blinkt();
 
     private int failureCount;
@@ -143,9 +145,15 @@ public class SolarPi {
             final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(getConfigValue(SOLAR_USER), getConfigValue(SOLAR_PASS));
             provider.setCredentials(AuthScope.ANY, credentials);
 
+            final RequestConfig config = RequestConfig.custom()
+                    .setConnectTimeout(TIMEOUT * 1000)
+                    .setConnectionRequestTimeout(TIMEOUT * 1000)
+                    .setSocketTimeout(TIMEOUT * 1000).build();
+
             try (final CloseableHttpClient client = HttpClientBuilder.create()
                     .setDefaultCredentialsProvider(provider)
                     .setRetryHandler(new DefaultHttpRequestRetryHandler(3, true))
+                    .setDefaultRequestConfig(config)
                     .build()) {
                 try (final CloseableHttpResponse response = client.execute(new HttpGet(getConfigValue(SOLAR_URL)))) {
                     final HttpEntity entity = response.getEntity();
