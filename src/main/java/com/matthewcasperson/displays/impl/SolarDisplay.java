@@ -40,7 +40,7 @@ public class SolarDisplay implements Display {
     private static final String SOLAR_USER = "SOLAR_USER";
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
-    private static final RainEffect RAIN_EFFECT = new RainEffect(MAX_BRIGHTNESS, 2.0f);
+    private static final RainEffect RAIN_EFFECT = new RainEffect(MAX_BRIGHTNESS, 4.0f);
     private int failureCount;
     private boolean raining = true;
     private Pixel lastResult = new Pixel();

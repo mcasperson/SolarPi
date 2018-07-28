@@ -170,14 +170,12 @@ public class Blinkt {
             brightness = (int)(31.0 * brightness) & 0b11111;
         }
 
-        pixels[x] = new int[] {
-                r & 0xff,
-                g & 0xff,
-                b & 0xff,
-                brightness == 0
+        pixels[x][0] = r & 0xff;
+        pixels[x][1] = g & 0xff;
+        pixels[x][2] = g & 0xff;
+        pixels[x][3] = brightness == 0
                         ? pixels[x][3]
-                        : (int)(31.0 * brightness) & 0b11111
-        };
+                        : (int)(31.0 * brightness) & 0b11111;
     }
 
     /**
@@ -185,12 +183,25 @@ public class Blinkt {
      * If you don't supply a brightness value, the last value will be kept.
      */
     public void setPixel(int x, int r, int g, int b) {
-        pixels[x] = new int[] {
-                r & 0xff,
-                g & 0xff,
-                b & 0xff,
-                pixels[x][3]
-        };
+        pixels[x][0] = r & 0xff;
+        pixels[x][1] = g & 0xff;
+        pixels[x][2] = g & 0xff;
+    }
+
+    /**
+     * Set the RGB value, and optionally brightness, of a single pixel
+     * If you don't supply a brightness value, the last value will be kept.
+     */
+    public void setPixel(int x, float brightness) {
+        if (brightness == 0) {
+            brightness = pixels[x][3];
+        } else {
+            brightness = (int)(31.0 * brightness) & 0b11111;
+        }
+
+        pixels[x][3] = brightness == 0
+                ? pixels[x][3]
+                : (int)(31.0 * brightness) & 0b11111;
     }
 
     /**
