@@ -27,6 +27,8 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.matthewcasperson.Constants.MAX_BRIGHTNESS;
+
 public class SolarDisplay implements Display {
 
     private static final ConfigurationUtils CONFIGURATION_UTILS = new ConfigurationUtilsImpl();
@@ -38,14 +40,14 @@ public class SolarDisplay implements Display {
     private static final String SOLAR_USER = "SOLAR_USER";
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
-    private static final RainEffect RAIN_EFFECT = new RainEffect(0.3f, 2.0f);
+    private static final RainEffect RAIN_EFFECT = new RainEffect(MAX_BRIGHTNESS, 2.0f);
     private int failureCount;
     private boolean raining = true;
     private Pixel lastResult = new Pixel();
 
 
     @Override
-    public void display(final Blinkt blinkt) {
+    public void calculate(final Blinkt blinkt) {
         setStatus(blinkt, getWatts());
     }
 
@@ -152,7 +154,7 @@ public class SolarDisplay implements Display {
 
             /*
                 Any issues with the HTTP request are logged, and we return a blank string.
-                This will result in the blinking red light display.
+                This will result in the blinking red light calculate.
              */
             System.err.println(DATE_FORMAT.format(new Date()) + " " + ex.toString());
             return "";

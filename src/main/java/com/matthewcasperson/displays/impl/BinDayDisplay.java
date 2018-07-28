@@ -15,12 +15,17 @@ public class BinDayDisplay implements Display {
     private static final DateTime DOUBLE_BIN_DAY = new DateTime(2018, 7, 24, 0, 0);
 
     @Override
-    public void display(final Blinkt blinkt) {
+    public void calculate(final Blinkt blinkt) {
         final DateTime now = new DateTime();
         blinkt.setPixel(7, 0, 0, 255);
         if (isRecyclingBinDay(now)) {
             blinkt.setPixel(6, 0, 0, 255);
         }
+    }
+
+    @Override
+    public void update(final Blinkt blink, final float delta) {
+
     }
 
     public boolean isRecyclingBinDay(final DateTime now) {

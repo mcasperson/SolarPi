@@ -7,14 +7,13 @@ import com.matthewcasperson.displays.impl.SolarDisplay;
 import com.matthewcasperson.utils.GeneralUtils;
 import com.matthewcasperson.utils.impl.GeneralUtilsImpl;
 
-import java.util.Date;
+import static com.matthewcasperson.Constants.MAX_BRIGHTNESS;
 
 public class SolarPi {
 
     private static final GeneralUtils GENERAL_UTILS = new GeneralUtilsImpl();
     private static final int REFRESH_PERIOD = 60000;
     private static final int INITIAL_TEST_PERIOD = 1000;
-    private static final float BRIGHTNESS = 0.1f;
     private static final Blinkt BLINKT = new Blinkt();
     private static final Display[] DISPLAYS = new Display[] {
             new SolarDisplay(),
@@ -33,7 +32,7 @@ public class SolarPi {
     }
 
     public SolarPi() {
-        BLINKT.setBrightness(BRIGHTNESS);
+        BLINKT.setBrightness(MAX_BRIGHTNESS);
 
         initialLedTest();
 
@@ -45,7 +44,7 @@ public class SolarPi {
 
     private void displayLoop() {
         for(final Display display : DISPLAYS) {
-            display.display(BLINKT);
+            display.calculate(BLINKT);
         }
         BLINKT.show();
     }
