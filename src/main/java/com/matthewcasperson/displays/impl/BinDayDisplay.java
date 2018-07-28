@@ -5,7 +5,13 @@ import com.matthewcasperson.displays.Display;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+/**
+ * Shows two blue lights when the next bin day is a double bin day, and one blue light when it is a single bin day.
+ */
 public class BinDayDisplay implements Display {
+    /**
+     * A double bin day at some point in the past
+     */
     private static final DateTime DOUBLE_BIN_DAY = new DateTime(2018, 7, 24, 0, 0);
 
     @Override
