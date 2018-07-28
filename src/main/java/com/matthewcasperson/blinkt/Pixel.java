@@ -1,4 +1,4 @@
-package com.matthewcasperson;
+package com.matthewcasperson.blinkt;
 
 public class Pixel {
     public int r;

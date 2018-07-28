@@ -1,6 +1,6 @@
 package com.matthewcasperson.displays.impl;
 
-import com.matthewcasperson.Blinkt;
+import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.displays.Display;
 import com.matthewcasperson.utils.ConfigurationUtils;
 import com.matthewcasperson.utils.impl.ConfigurationUtilsImpl;

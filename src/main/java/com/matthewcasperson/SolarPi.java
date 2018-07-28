@@ -1,5 +1,6 @@
 package com.matthewcasperson;
 
+import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.displays.Display;
 import com.matthewcasperson.displays.impl.BinDayDisplay;
 import com.matthewcasperson.displays.impl.SolarDisplay;

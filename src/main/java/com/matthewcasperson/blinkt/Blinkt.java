@@ -1,4 +1,4 @@
-package com.matthewcasperson;
+package com.matthewcasperson.blinkt;
 
 import com.pi4j.io.gpio.*;
 

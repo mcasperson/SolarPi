@@ -1,6 +1,6 @@
 package com.matthewcasperson.displays;
 
-import com.matthewcasperson.Blinkt;
+import com.matthewcasperson.blinkt.Blinkt;
 
 public interface Display {
     void display(final Blinkt blinkt);
