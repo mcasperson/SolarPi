@@ -16,6 +16,7 @@ public class SolarPi {
     private static final GeneralUtils GENERAL_UTILS = new GeneralUtilsImpl();
     private static final int REFRESH_PERIOD = 60000;
     private static final int INITIAL_TEST_PERIOD = 1000;
+    private static final long MAX_FRAME_RATE = 500;
     private static final Blinkt BLINKT = new NoOpBlinkImpl();
     private static final Display[] DISPLAYS = new Display[] {
             new SolarDisplay(),
@@ -58,9 +59,9 @@ public class SolarPi {
             last = System.currentTimeMillis();
 
             // Limit the "frame rate"
-            final float delta = (last - start) / 1000.0f;
-            if (delta < 0.05f) {
-                GENERAL_UTILS.sleep(500);
+            final long delta = last - start;
+            if (delta < MAX_FRAME_RATE) {
+                GENERAL_UTILS.sleep(MAX_FRAME_RATE - delta);
                 continue;
             }
 
