@@ -15,7 +15,7 @@ public class SolarPi {
     private static final GeneralUtils GENERAL_UTILS = new GeneralUtilsImpl();
     private static final int REFRESH_PERIOD = 60000;
     private static final int INITIAL_TEST_PERIOD = 1000;
-    private static final long MAX_FRAME_RATE = 500;
+    private static final long MAX_FRAME_RATE = 50;
     private static final Blinkt BLINKT = new BlinktImpl();
     private static final Display[] DISPLAYS = new Display[] {
             new SolarDisplay(),
