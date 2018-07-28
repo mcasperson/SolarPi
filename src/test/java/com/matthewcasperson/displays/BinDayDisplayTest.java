@@ -1,4 +1,4 @@
-package com.matthewcasoerson.displays;
+package com.matthewcasperson.displays;
 
 import com.matthewcasperson.displays.impl.BinDayDisplay;
 import org.joda.time.DateTime;

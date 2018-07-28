@@ -3,6 +3,7 @@ package com.matthewcasperson.displays.impl;
 import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.blinkt.Pixel;
 import com.matthewcasperson.displays.Display;
+import com.matthewcasperson.effects.impl.RainEffect;
 import com.matthewcasperson.utils.ConfigurationUtils;
 import com.matthewcasperson.utils.impl.ConfigurationUtilsImpl;
 import org.apache.commons.io.IOUtils;
@@ -37,13 +38,24 @@ public class SolarDisplay implements Display {
     private static final String SOLAR_USER = "SOLAR_USER";
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
+    private static final RainEffect RAIN_EFFECT = new RainEffect(0.3f, 2.0f);
     private int failureCount;
+    private boolean raining = true;
     private Pixel lastResult = new Pixel();
 
 
     @Override
     public void display(final Blinkt blinkt) {
         setStatus(blinkt, getWatts());
+    }
+
+    @Override
+    public void update(final Blinkt blink, final float delta) {
+        if (raining) {
+            for (int i = 2; i < 8; ++i) {
+                RAIN_EFFECT.update(i, blink, delta);
+            }
+        }
     }
 
     /**

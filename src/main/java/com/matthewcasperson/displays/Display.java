@@ -4,4 +4,5 @@ import com.matthewcasperson.blinkt.Blinkt;
 
 public interface Display {
     void display(final Blinkt blinkt);
+    void update(final Blinkt blink, final float delta);
 }

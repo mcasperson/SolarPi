@@ -1,6 +1,9 @@
 package com.matthewcasperson.blinkt;
 
 import com.pi4j.io.gpio.*;
+import org.apache.commons.math3.util.Precision;
+
+import java.text.DecimalFormat;
 
 public class Blinkt {
     static {
@@ -153,7 +156,7 @@ public class Blinkt {
         float brightness = (float)pixels[x][3];
         brightness /= 31.0;
 
-        return new Pixel(r, g, b, Math.round(brightness));
+        return new Pixel(r, g, b, Precision.round(brightness, 3));
     }
 
     /**

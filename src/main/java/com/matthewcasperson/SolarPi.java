@@ -7,6 +7,8 @@ import com.matthewcasperson.displays.impl.SolarDisplay;
 import com.matthewcasperson.utils.GeneralUtils;
 import com.matthewcasperson.utils.impl.GeneralUtilsImpl;
 
+import java.util.Date;
+
 public class SolarPi {
 
     private static final GeneralUtils GENERAL_UTILS = new GeneralUtilsImpl();
@@ -36,11 +38,27 @@ public class SolarPi {
         initialLedTest();
 
         while (true) {
+            displayLoop();
+            updateLoop();
+        }
+    }
+
+    private void displayLoop() {
+        for(final Display display : DISPLAYS) {
+            display.display(BLINKT);
+        }
+        BLINKT.show();
+    }
+
+    private void updateLoop() {
+        final long start = System.currentTimeMillis();
+        long last = start;
+        while (last - start < REFRESH_PERIOD) {
             for(final Display display : DISPLAYS) {
-                display.display(BLINKT);
+                display.update(BLINKT, (last - start) / 1000.0f);
             }
             BLINKT.show();
-            GENERAL_UTILS.sleep(REFRESH_PERIOD);
+            last = System.currentTimeMillis();
         }
     }
 
