@@ -4,7 +4,7 @@ import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.blinkt.Pixel;
 import org.apache.commons.math3.util.Precision;
 
-public class NoOpBlinkImpl implements Blinkt {
+public class NoOpBlinktImpl implements Blinkt {
     private static final int NUM_PIXELS = 8;
     private static final int BRIGHTNESS = 7;
 

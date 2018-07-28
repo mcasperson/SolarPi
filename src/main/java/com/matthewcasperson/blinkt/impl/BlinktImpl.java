@@ -4,7 +4,7 @@ import com.matthewcasperson.utils.GeneralUtils;
 import com.matthewcasperson.utils.impl.GeneralUtilsImpl;
 import com.pi4j.io.gpio.*;
 
-public class BlinktImpl extends NoOpBlinkImpl {
+public class BlinktImpl extends NoOpBlinktImpl {
     static {
         GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
     }
