@@ -130,6 +130,19 @@ public class Blinkt {
     }
 
     /**
+     * Set the RGB value and optionally brightness of all pixels.
+     * If you don 't supply a brightness value, the last value set for each pixel be kept.
+     * @param r Amount of red: 0 to 255
+     * @param g Amount of green: 0 to 255
+     * @param b Amount of blue: 0 to 255
+     */
+    public void setAll(int r, int g, int b) {
+        for (int x =0 ; x < NUM_PIXELS; ++x) {
+            setPixel(x, r, g, b);
+        }
+    }
+
+    /**
      * Get the RGB and brightness value of a specific pixel
      */
     public Pixel getPixel(int x) {
