@@ -21,7 +21,6 @@ public class BinDayDisplay implements Display {
         if (isRecyclingBinDay(now)) {
             blinkt.setPixel(6, 0, 0, 255);
         }
-        blinkt.show();
     }
 
     public boolean isRecyclingBinDay(final DateTime now) {

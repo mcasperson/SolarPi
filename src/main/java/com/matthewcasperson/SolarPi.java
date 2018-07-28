@@ -39,6 +39,7 @@ public class SolarPi {
             for(final Display display : DISPLAYS) {
                 display.display(BLINKT);
             }
+            BLINKT.show();
             GENERAL_UTILS.sleep(REFRESH_PERIOD);
         }
     }

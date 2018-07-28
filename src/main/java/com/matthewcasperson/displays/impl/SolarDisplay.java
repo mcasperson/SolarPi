@@ -1,6 +1,7 @@
 package com.matthewcasperson.displays.impl;
 
 import com.matthewcasperson.blinkt.Blinkt;
+import com.matthewcasperson.blinkt.Pixel;
 import com.matthewcasperson.displays.Display;
 import com.matthewcasperson.utils.ConfigurationUtils;
 import com.matthewcasperson.utils.impl.ConfigurationUtilsImpl;
@@ -37,6 +38,7 @@ public class SolarDisplay implements Display {
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
     private int failureCount;
+    private Pixel lastResult;
 
 
     @Override
@@ -56,19 +58,18 @@ public class SolarDisplay implements Display {
 
         if (watts >= MAX_USAGE) {
             System.out.println(" (GREEN)");
-            blinkt.setAll(0 , 255, 0);
+            lastResult = new Pixel(0, 255, 0);
         } else if (watts >= MAX_USAGE / 2 ) {
             System.out.println(" (YELLOW)");
-            blinkt.setAll(255 , 255, 0);
+            lastResult = new Pixel(255, 255, 0);
         } else if (watts >= 0) {
             System.out.println(" (RED)");
-            blinkt.setAll(255 , 0, 0);
+            lastResult = new Pixel(255, 0, 0);
         } else {
             System.out.println(" (ERROR)");
-            blinkt.setAll(255 , 0, 255);
         }
 
-        blinkt.show();
+        blinkt.setAll(lastResult.r, lastResult.g, lastResult.b);
     }
 
 
