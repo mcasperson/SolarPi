@@ -17,12 +17,11 @@ public class RainEffect implements Effect {
     }
 
     public void update(final int pixel, final Blinkt blinkt, final float delta) {
-        final float change = delta / cyclePeriod * maxBrightness;
+        final float change = Math.min(delta, 0.1f) / cyclePeriod * maxBrightness;
         final Pixel blinktPixel = blinkt.getPixel(pixel);
         final float brightness = blinktPixel.brightness + change;
+        final float newBrightness = brightness > maxBrightness ? 0 : brightness;
 
-        blinkt.setPixel(
-                pixel,
-                brightness > maxBrightness ? 0 : brightness);
+        blinkt.setPixel(pixel, newBrightness);
     }
 }

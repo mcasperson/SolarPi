@@ -1,122 +1,18 @@
 package com.matthewcasperson.blinkt;
 
-import com.pi4j.io.gpio.*;
-import org.apache.commons.math3.util.Precision;
+public interface Blinkt {
+    void setClearOnExit(boolean clearOnExit);
 
-import java.text.DecimalFormat;
-
-public class Blinkt {
-    static {
-        GpioFactory.setDefaultProvider(new RaspiGpioProvider(RaspiPinNumberingScheme.BROADCOM_PIN_NUMBERING));
-    }
-
-    private static final int NUM_PIXELS = 8;
-    private static final int BRIGHTNESS = 7;
-    private static final GpioController gpio = GpioFactory.getInstance();
-
-    private final int[][] pixels = new int[][] {
-            {0, 0, 0, BRIGHTNESS},
-            {0, 0, 0, BRIGHTNESS},
-            {0, 0, 0, BRIGHTNESS},
-            {0, 0, 0, BRIGHTNESS},
-            {0, 0, 0, BRIGHTNESS},
-            {0, 0, 0, BRIGHTNESS},
-            {0, 0, 0, BRIGHTNESS},
-            {0, 0, 0, BRIGHTNESS}
-    };
-    private final GpioPinDigitalOutput dat;
-    private final GpioPinDigitalOutput clk;
-    private boolean clearOnExit = true;
-
-    public void setClearOnExit(final boolean clearOnExit) {
-        this.clearOnExit = clearOnExit;
-    }
-
-    public Blinkt() {
-        dat = getDigitalPin(RaspiBcmPin.GPIO_23, "DAT");
-        clk = getDigitalPin(RaspiBcmPin.GPIO_24, "CLK");
-    }
-
-    public void exit() {
-        if (clearOnExit) {
-            clear();
-            show();
-        }
-    }
+    void exit();
 
     /**
      * Set the brightness of all pixels
      */
-    public void setBrightness(float brightness) {
-        if (brightness < 0 || brightness > 1){
-            throw new RuntimeException ("Brightness should be between 0.0 and 1.0");
-        }
+    void setBrightness(float brightness);
 
-        for (int x = 0; x < NUM_PIXELS; ++x) {
-            pixels[x][3] = (int)(31.0 * brightness) & 0b11111;
-        }
-    }
+    void clear();
 
-    public void clear() {
-        for (int x = 0; x < NUM_PIXELS; ++x) {
-            pixels[x][0] = 0;
-            pixels[x][1] = 0;
-            pixels[x][2] = 0;
-        }
-    }
-
-    private void writeByte(int input) {
-        for (int x = 0; x < 8; ++x) {
-            if ((input & 0b10000000) == 0) {
-                dat.low();
-            } else {
-                dat.high();
-            }
-            clk.high();
-            sleep(0, 500);
-            input <<=1;
-            clk.low();
-            sleep(0, 500);
-        }
-    }
-
-    private void eof() {
-        dat.low();
-        for (int x = 0; x < 36; ++x) {
-            clk.high();
-            sleep(0, 500);
-            clk.low();
-            sleep(0, 500);
-        }
-    }
-
-    private void sof() {
-        dat.low();
-        for (int x = 0; x < 32; ++x) {
-            clk.high();
-            sleep(0, 500);
-            clk.low();
-            sleep(0, 500);
-        }
-    }
-
-    public void show() {
-        sof();
-
-        for (int[] pixel : pixels) {
-            int r = pixel[0];
-            int g = pixel[1];
-            int b = pixel[2];
-            int brightness = pixel[3];
-
-            writeByte(0b11100000 | brightness);
-            writeByte(b);
-            writeByte(g);
-            writeByte(r);
-        }
-
-        eof();
-    }
+    void show();
 
     /**
      * Set the RGB value and optionally brightness of all pixels.
@@ -126,11 +22,7 @@ public class Blinkt {
      * @param b Amount of blue: 0 to 255
      * @param brightness Brightness: 0.0 to 1.0
      */
-    public void setAll(int r, int g, int b, float brightness) {
-        for (int x =0 ; x < NUM_PIXELS; ++x) {
-            setPixel(x, r, g, b, brightness);
-        }
-    }
+    void setAll(int r, int g, int b, float brightness);
 
     /**
      * Set the RGB value and optionally brightness of all pixels.
@@ -139,92 +31,28 @@ public class Blinkt {
      * @param g Amount of green: 0 to 255
      * @param b Amount of blue: 0 to 255
      */
-    public void setAll(int r, int g, int b) {
-        for (int x =0 ; x < NUM_PIXELS; ++x) {
-            setPixel(x, r, g, b);
-        }
-    }
+    void setAll(int r, int g, int b);
 
     /**
      * Get the RGB and brightness value of a specific pixel
      */
-    public Pixel getPixel(int x) {
-
-        int r = pixels[x][0];
-        int g = pixels[x][1];
-        int b = pixels[x][2];
-        float brightness = (float)pixels[x][3];
-        brightness /= 31.0;
-
-        return new Pixel(r, g, b, Precision.round(brightness, 3));
-    }
+    Pixel getPixel(int x);
 
     /**
      * Set the RGB value, and optionally brightness, of a single pixel
      * If you don't supply a brightness value, the last value will be kept.
      */
-    public void setPixel(int x, int r, int g, int b, float brightness) {
-        if (brightness == 0) {
-            brightness = pixels[x][3];
-        } else {
-            brightness = (int)(31.0 * brightness) & 0b11111;
-        }
-
-        pixels[x][0] = r & 0xff;
-        pixels[x][1] = g & 0xff;
-        pixels[x][2] = b & 0xff;
-        pixels[x][3] = brightness == 0
-                        ? pixels[x][3]
-                        : (int)(31.0 * brightness) & 0b11111;
-    }
+    void setPixel(int x, int r, int g, int b, float brightness);
 
     /**
      * Set the RGB value, and optionally brightness, of a single pixel
      * If you don't supply a brightness value, the last value will be kept.
      */
-    public void setPixel(int x, int r, int g, int b) {
-        pixels[x][0] = r & 0xff;
-        pixels[x][1] = g & 0xff;
-        pixels[x][2] = b & 0xff;
-    }
+    void setPixel(int x, int r, int g, int b);
 
     /**
      * Set the RGB value, and optionally brightness, of a single pixel
      * If you don't supply a brightness value, the last value will be kept.
      */
-    public void setPixel(int x, float brightness) {
-        if (brightness == 0) {
-            brightness = pixels[x][3];
-        } else {
-            brightness = (int)(31.0 * brightness) & 0b11111;
-        }
-
-        pixels[x][3] = brightness == 0
-                ? pixels[x][3]
-                : (int)(31.0 * brightness) & 0b11111;
-    }
-
-    /**
-     * A no-throw sleep method
-     * @param milliseconds How long to sleep for
-     */
-    private void sleep(final int milliseconds, final int nanoseconds) {
-        try {
-            Thread.sleep(milliseconds, nanoseconds);
-        } catch (final InterruptedException e) {
-            // ignored
-        }
-    }
-
-    /**
-     * Build a pin object
-     * @param pin The pin number
-     * @param name The pin name
-     * @return The configured pin object
-     */
-    private GpioPinDigitalOutput getDigitalPin(final Pin pin, final String name) {
-        final GpioPinDigitalOutput gpioPin = gpio.provisionDigitalOutputPin(pin, name, PinState.LOW);
-        gpioPin.setShutdownOptions(true, PinState.LOW, PinPullResistance.OFF);
-        return gpioPin;
-    }
+    void setPixel(int x, float brightness);
 }
