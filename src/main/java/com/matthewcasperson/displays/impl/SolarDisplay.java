@@ -38,7 +38,7 @@ public class SolarDisplay implements Display {
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
     private int failureCount;
-    private Pixel lastResult;
+    private Pixel lastResult = new Pixel();
 
 
     @Override
