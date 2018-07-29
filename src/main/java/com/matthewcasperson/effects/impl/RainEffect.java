@@ -24,7 +24,7 @@ public class RainEffect implements Effect {
             final Pixel blinktPixel = blinkt.getPixel(pixel);
             final float change = delta / cyclePeriod * maxBrightness;
             final float brightness = blinktPixel.getBrightness() + Math.max(change, MIN_BRIGHTNESS_CHANGE);
-            final float newBrightness = brightness > maxBrightness ? 0 : brightness;
+            final float newBrightness = brightness > maxBrightness ? MIN_BRIGHTNESS_CHANGE : brightness;
 
             blinkt.setPixel(pixel, newBrightness);
         }

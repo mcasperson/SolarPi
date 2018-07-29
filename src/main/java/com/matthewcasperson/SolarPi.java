@@ -18,9 +18,9 @@ public class SolarPi {
     private static final int REFRESH_PERIOD = 60000;
     private static final int INITIAL_TEST_PERIOD = 1000;
 
-    private static final Blinkt BLINKT = new BlinktImpl();
+    private static final Blinkt BLINKT = new NoOpBlinktImpl();
     private static final Display[] DISPLAYS = new Display[] {
-            new SolarDisplay(BLINKT),
+            new SolarDisplay(),
             new BinDayDisplay()
     };
 
@@ -39,6 +39,10 @@ public class SolarPi {
         BLINKT.setBrightness(MAX_BRIGHTNESS);
 
         initialLedTest();
+
+        for(final Display display : DISPLAYS) {
+            display.init(BLINKT);
+        }
 
         while (true) {
             displayLoop();

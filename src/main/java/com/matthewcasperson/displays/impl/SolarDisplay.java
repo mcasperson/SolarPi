@@ -63,7 +63,7 @@ public class SolarDisplay implements Display {
         this.raining = raining;
     }
 
-    public SolarDisplay(final Blinkt blinkt) {
+    public void init(final Blinkt blinkt) {
         setRaining(true, blinkt);
     }
 
