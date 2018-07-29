@@ -5,7 +5,9 @@ import com.matthewcasperson.blinkt.Pixel;
 import com.matthewcasperson.displays.Display;
 import com.matthewcasperson.effects.impl.SparkleEffect;
 import com.matthewcasperson.utils.ConfigurationUtils;
+import com.matthewcasperson.utils.WebUtils;
 import com.matthewcasperson.utils.impl.ConfigurationUtilsImpl;
+import com.matthewcasperson.utils.impl.WebUtilsImpl;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.HttpEntity;
@@ -32,7 +34,7 @@ import static com.matthewcasperson.Constants.MAX_BRIGHTNESS;
 public class SolarDisplay implements Display {
 
     private static final ConfigurationUtils CONFIGURATION_UTILS = new ConfigurationUtilsImpl();
-    public static final int TIMEOUT = 5;
+    private static final WebUtils WEB_UTILS = new WebUtilsImpl();
     private static final int MAX_USAGE = 2500;
     private static final int MAX_FAILURES = 3;
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
@@ -40,7 +42,7 @@ public class SolarDisplay implements Display {
     private static final String SOLAR_USER = "SOLAR_USER";
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
-    private static final float RAIN_CYCLE_EFFECT_PERIOD = 4.0f;
+    private static final float RAIN_CYCLE_EFFECT_PERIOD = 6.0f;
     private static final SparkleEffect RAIN_EFFECT = new SparkleEffect(MAX_BRIGHTNESS, RAIN_CYCLE_EFFECT_PERIOD);
     private int failureCount;
     private boolean raining = false;
@@ -49,12 +51,12 @@ public class SolarDisplay implements Display {
     private void setRaining(final boolean raining, final Blinkt blinkt) {
         if (raining) {
             if (!this.raining) {
-                for (int i = 2; i < 8; ++i) {
+                for (int i = 0; i < 6; ++i) {
                     blinkt.setPixel(i, (float)Math.random() * MAX_BRIGHTNESS);
                 }
             }
         } else {
-            for (int i = 2; i < 8; ++i) {
+            for (int i = 0; i < 6; ++i) {
                 blinkt.setPixel(i, MAX_BRIGHTNESS);
             }
         }
@@ -133,34 +135,11 @@ public class SolarDisplay implements Display {
      */
     private String getSolarWebPage()  {
         try {
-            final CredentialsProvider provider = new BasicCredentialsProvider();
-            final UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
+            return WEB_UTILS.HttpGet(
+                    CONFIGURATION_UTILS.getConfigValue(SOLAR_URL),
                     CONFIGURATION_UTILS.getConfigValue(SOLAR_USER),
-                    CONFIGURATION_UTILS.getConfigValue(SOLAR_PASS));
-            provider.setCredentials(AuthScope.ANY, credentials);
-
-            final RequestConfig config = RequestConfig.custom()
-                    .setConnectTimeout(TIMEOUT * 1000)
-                    .setConnectionRequestTimeout(TIMEOUT * 1000)
-                    .setSocketTimeout(TIMEOUT * 1000).build();
-
-            try (final CloseableHttpClient client = HttpClientBuilder.create()
-                    .setDefaultCredentialsProvider(provider)
-                    .setRetryHandler(new DefaultHttpRequestRetryHandler(3, true))
-                    .setDefaultRequestConfig(config)
-                    .build()) {
-                try (final CloseableHttpResponse response = client.execute(new HttpGet(CONFIGURATION_UTILS.getConfigValue(SOLAR_URL)))) {
-                    final HttpEntity entity = response.getEntity();
-                    try {
-                        // all good, so reset the failure count
-                        failureCount = 0;
-                        return IOUtils.toString(entity.getContent(), Charset.forName("UTF-8"));
-                    } finally {
-                        EntityUtils.consumeQuietly(entity);
-                    }
-                }
-            }
-
+                    CONFIGURATION_UTILS.getConfigValue(SOLAR_PASS)
+            );
         } catch (final Exception ex) {
             /*
                 Successive failures will exit the application, and use supervisord to restart it
