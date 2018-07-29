@@ -8,9 +8,14 @@ import com.matthewcasperson.displays.Display;
 import com.matthewcasperson.effects.impl.BlinkEffect;
 
 public class FuelDisplay implements Display {
-    private static final Fuel FUEL = new AlwaysGoodFuelImpl();
+    private static final Fuel FUEL = new FuelImpl();
     private static final BlinkEffect BLINK_EFFECT = new BlinkEffect();
     private boolean isGoodFuelDay = false;
+
+    private void setGoodFueldDay(final boolean isGoodFuelDay) {
+        this.isGoodFuelDay = isGoodFuelDay;
+        System.out.println("Is good fuel day: " + isGoodFuelDay);
+    }
 
     @Override
     public void init(Blinkt blinkt) {
@@ -25,9 +30,9 @@ public class FuelDisplay implements Display {
     @Override
     public void calculateDay(final Blinkt blinkt) {
         try {
-            this.isGoodFuelDay = FUEL.isGoodFuelDay();
+            setGoodFueldDay(FUEL.isGoodFuelDay());
         } catch (final Exception ex) {
-            this.isGoodFuelDay = false;
+            setGoodFueldDay(false);
         }
     }
 
