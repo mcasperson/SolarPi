@@ -4,10 +4,13 @@ import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.blinkt.Pixel;
 import com.matthewcasperson.effects.Effect;
 
+import static com.matthewcasperson.Constants.MIN_BRIGHTNESS_CHANGE;
+
 /**
  * An effect to represent rain. Pixels cycle from dark to max brightness and back to dark.
  */
 public class RainEffect implements Effect {
+
     final float maxBrightness;
     final float cyclePeriod;
 
@@ -20,7 +23,7 @@ public class RainEffect implements Effect {
         if (delta != 0) {
             final Pixel blinktPixel = blinkt.getPixel(pixel);
             final float change = delta / cyclePeriod * maxBrightness;
-            final float brightness = blinktPixel.getBrightness() + change;
+            final float brightness = blinktPixel.getBrightness() + Math.max(change, MIN_BRIGHTNESS_CHANGE);
             final float newBrightness = brightness > maxBrightness ? 0 : brightness;
 
             blinkt.setPixel(pixel, newBrightness);

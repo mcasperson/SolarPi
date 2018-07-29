@@ -2,6 +2,7 @@ package com.matthewcasperson;
 
 import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.blinkt.impl.BlinktImpl;
+import com.matthewcasperson.blinkt.impl.NoOpBlinktImpl;
 import com.matthewcasperson.displays.Display;
 import com.matthewcasperson.displays.impl.BinDayDisplay;
 import com.matthewcasperson.displays.impl.SolarDisplay;
@@ -9,13 +10,14 @@ import com.matthewcasperson.utils.GeneralUtils;
 import com.matthewcasperson.utils.impl.GeneralUtilsImpl;
 
 import static com.matthewcasperson.Constants.MAX_BRIGHTNESS;
+import static com.matthewcasperson.Constants.MAX_FRAME_RATE;
 
 public class SolarPi {
 
     private static final GeneralUtils GENERAL_UTILS = new GeneralUtilsImpl();
     private static final int REFRESH_PERIOD = 60000;
     private static final int INITIAL_TEST_PERIOD = 1000;
-    private static final long MAX_FRAME_RATE = 1000;
+
     private static final Blinkt BLINKT = new BlinktImpl();
     private static final Display[] DISPLAYS = new Display[] {
             new SolarDisplay(BLINKT),

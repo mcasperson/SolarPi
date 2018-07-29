@@ -95,6 +95,10 @@ public class NoOpBlinktImpl implements Blinkt {
 
     @Override
     public void setPixel(int x, float brightness) {
-        pixels[x][3] = (int)(31.0 * brightness) & 0b11111;
+        if (brightness == 0) {
+            pixels[x][3] = 0;
+        } else {
+            pixels[x][3] = (int)(31.0f * brightness) & 0b11111;
+        }
     }
 }
