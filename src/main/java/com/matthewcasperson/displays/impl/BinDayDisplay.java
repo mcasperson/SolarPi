@@ -30,7 +30,7 @@ public class BinDayDisplay implements Display {
 
     @Override
     public void update(final Blinkt blink, final float delta) {
-
+        calculate(blink);
     }
 
     public boolean isRecyclingBinDay(final DateTime now) {
