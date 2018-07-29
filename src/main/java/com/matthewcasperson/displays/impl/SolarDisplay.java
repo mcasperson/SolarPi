@@ -4,6 +4,8 @@ import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.blinkt.Pixel;
 import com.matthewcasperson.datasources.SolarSystem;
 import com.matthewcasperson.datasources.Weather;
+import com.matthewcasperson.datasources.impl.AlwaysRainWeather;
+import com.matthewcasperson.datasources.impl.WeatherImpl;
 import com.matthewcasperson.displays.Display;
 import com.matthewcasperson.effects.impl.SparkleEffect;
 
@@ -19,7 +21,7 @@ public class SolarDisplay implements Display {
     private static final SparkleEffect RAIN_EFFECT = new SparkleEffect(MAX_BRIGHTNESS, RAIN_CYCLE_EFFECT_PERIOD);
 
     private final SolarSystem solarSystem = new SolarSystem();
-    private final Weather weather = new Weather();
+    private final Weather weather = new AlwaysRainWeather();
     private boolean raining = false;
     private Pixel lastResult = new Pixel();
 
