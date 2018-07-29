@@ -62,8 +62,11 @@ public class SolarPi {
             if (delta < MAX_FRAME_RATE) {
                 GENERAL_UTILS.sleep(MAX_FRAME_RATE - delta);
             } else {
+                final long fixedDelta = Math.max(MAX_FRAME_RATE, delta);
+                System.out.println("Delta: " + fixedDelta);
+
                 for(final Display display : DISPLAYS) {
-                    display.update(BLINKT, Math.max(MAX_FRAME_RATE, delta) / 1000.0f);
+                    display.update(BLINKT, fixedDelta / 1000.0f);
                 }
                 BLINKT.show();
             }
