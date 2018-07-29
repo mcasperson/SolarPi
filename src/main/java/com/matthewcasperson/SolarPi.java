@@ -55,19 +55,18 @@ public class SolarPi {
         final long start = System.currentTimeMillis();
         long last = start;
         while (System.currentTimeMillis() - start < REFRESH_PERIOD) {
+            final long delta = System.currentTimeMillis() - last;
+            last = System.currentTimeMillis();
+
             // Limit the "frame rate"
-            final long delta = last - start;
             if (delta < MAX_FRAME_RATE) {
                 GENERAL_UTILS.sleep(MAX_FRAME_RATE - delta);
-
             } else {
                 for(final Display display : DISPLAYS) {
                     display.update(BLINKT, (last - start) / 1000.0f);
                 }
                 BLINKT.show();
             }
-
-            last = System.currentTimeMillis();
         }
     }
 
