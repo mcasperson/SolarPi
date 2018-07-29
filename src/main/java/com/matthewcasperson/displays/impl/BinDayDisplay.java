@@ -15,6 +15,11 @@ public class BinDayDisplay implements Display {
     private static final DateTime DOUBLE_BIN_DAY = new DateTime(2018, 7, 24, 0, 0);
 
     @Override
+    public void init(final Blinkt blinkt) {
+
+    }
+
+    @Override
     public void calculate(final Blinkt blinkt) {
         final DateTime now = new DateTime();
         blinkt.setPixel(7, 0, 0, 255);

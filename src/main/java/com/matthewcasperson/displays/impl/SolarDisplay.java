@@ -3,7 +3,7 @@ package com.matthewcasperson.displays.impl;
 import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.blinkt.Pixel;
 import com.matthewcasperson.displays.Display;
-import com.matthewcasperson.effects.impl.RainEffect;
+import com.matthewcasperson.effects.impl.SparkleEffect;
 import com.matthewcasperson.utils.ConfigurationUtils;
 import com.matthewcasperson.utils.impl.ConfigurationUtilsImpl;
 import org.apache.commons.io.IOUtils;
@@ -28,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.matthewcasperson.Constants.MAX_BRIGHTNESS;
-import static com.matthewcasperson.Constants.MIN_BRIGHTNESS_CHANGE;
 
 public class SolarDisplay implements Display {
 
@@ -42,7 +41,7 @@ public class SolarDisplay implements Display {
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
     private static final float RAIN_CYCLE_EFFECT_PERIOD = 4.0f;
-    private static final RainEffect RAIN_EFFECT = new RainEffect(MAX_BRIGHTNESS, RAIN_CYCLE_EFFECT_PERIOD);
+    private static final SparkleEffect RAIN_EFFECT = new SparkleEffect(MAX_BRIGHTNESS, RAIN_CYCLE_EFFECT_PERIOD);
     private int failureCount;
     private boolean raining = false;
     private Pixel lastResult = new Pixel();

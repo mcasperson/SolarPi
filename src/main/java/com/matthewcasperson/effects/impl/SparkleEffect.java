@@ -9,12 +9,12 @@ import static com.matthewcasperson.Constants.MIN_BRIGHTNESS_CHANGE;
 /**
  * An effect to represent rain. Pixels cycle from dark to max brightness and back to dark.
  */
-public class RainEffect implements Effect {
+public class SparkleEffect implements Effect {
 
     final float maxBrightness;
     final float cyclePeriod;
 
-    public RainEffect(final float maxBrightness, final float cyclePeriod) {
+    public SparkleEffect(final float maxBrightness, final float cyclePeriod) {
         this.maxBrightness = maxBrightness;
         this.cyclePeriod = cyclePeriod;
     }
