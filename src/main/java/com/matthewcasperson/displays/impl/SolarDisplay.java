@@ -80,7 +80,7 @@ public class SolarDisplay implements Display {
     public void calculateDay(Blinkt blinkt) {
         try {
             final String weatherResponse = WEB_UTILS.HttpGet("https://api.darksky.net/forecast/" +
-                    CONFIGURATION_UTILS.getConfigValue("WEATHER_APIE_KEY") +
+                    CONFIGURATION_UTILS.getConfigValue("WEATHER_API_KEY") +
                     "/27.4698,153.0251");
             final float rainForecast = new JsonParser().parse(weatherResponse)
                     .getAsJsonObject()
