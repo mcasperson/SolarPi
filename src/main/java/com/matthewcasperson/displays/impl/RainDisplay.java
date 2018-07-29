@@ -19,13 +19,13 @@ public class RainDisplay implements Display {
             // offset the brightness so the sparkle effect isn't just all the leds
             // glowing at the same time.
             if (!this.raining) {
-                for (int i = 0; i < 6; ++i) {
+                for (int i = 0; i < 8; ++i) {
                     blinkt.setPixel(i, (float)Math.random() * MAX_BRIGHTNESS);
                 }
             }
         } else {
             // reset the brightness
-            for (int i = 0; i < 6; ++i) {
+            for (int i = 0; i < 8; ++i) {
                 blinkt.setPixel(i, MAX_BRIGHTNESS);
             }
         }
@@ -52,7 +52,7 @@ public class RainDisplay implements Display {
     @Override
     public void update(final Blinkt blink, float delta) {
         if (raining) {
-            for (int i = 0; i < 6; ++i) {
+            for (int i = 0; i < 8; ++i) {
                 RAIN_EFFECT.update(i, blink, delta);
             }
         }
