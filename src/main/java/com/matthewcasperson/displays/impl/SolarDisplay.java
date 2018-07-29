@@ -45,6 +45,17 @@ public class SolarDisplay implements Display {
     private boolean raining = true;
     private Pixel lastResult = new Pixel();
 
+    private void setRaining(final boolean raining, final Blinkt blinkt) {
+        if (raining) {
+            if (!this.raining) {
+                for (int i = 2; i < 8; ++i) {
+                    blinkt.setPixel(i, (float)Math.random() * MAX_BRIGHTNESS);
+                }
+            }
+        }
+
+        this.raining = raining;
+    }
 
     @Override
     public void calculate(final Blinkt blinkt) {
