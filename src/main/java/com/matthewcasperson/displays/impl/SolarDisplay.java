@@ -3,6 +3,7 @@ package com.matthewcasperson.displays.impl;
 import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.blinkt.Pixel;
 import com.matthewcasperson.datasources.SolarSystem;
+import com.matthewcasperson.datasources.impl.SolarSystemImpl;
 import com.matthewcasperson.datasources.Weather;
 import com.matthewcasperson.datasources.impl.AlwaysRainWeather;
 import com.matthewcasperson.datasources.impl.WeatherImpl;
@@ -20,8 +21,8 @@ public class SolarDisplay implements Display {
     private static final float RAIN_CYCLE_EFFECT_PERIOD = 6.0f;
     private static final SparkleEffect RAIN_EFFECT = new SparkleEffect(MAX_BRIGHTNESS, RAIN_CYCLE_EFFECT_PERIOD);
 
-    private final SolarSystem solarSystem = new SolarSystem();
-    private final Weather weather = new AlwaysRainWeather();
+    private final SolarSystem solarSystem = new SolarSystemImpl();
+    private final Weather weather = new WeatherImpl();
     private boolean raining = false;
     private Pixel lastResult = new Pixel();
 
