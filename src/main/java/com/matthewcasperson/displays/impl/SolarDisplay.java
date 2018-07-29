@@ -1,5 +1,7 @@
 package com.matthewcasperson.displays.impl;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.blinkt.Pixel;
 import com.matthewcasperson.displays.Display;
@@ -62,6 +64,7 @@ public class SolarDisplay implements Display {
         }
 
         this.raining = raining;
+        System.out.println("Rain forecast today: " + this.raining);
     }
 
     public void init(final Blinkt blinkt) {
@@ -69,8 +72,25 @@ public class SolarDisplay implements Display {
     }
 
     @Override
-    public void calculate(final Blinkt blinkt) {
+    public void calculateMinute(final Blinkt blinkt) {
         setStatus(blinkt, getWatts());
+    }
+
+    @Override
+    public void calculateDay(Blinkt blinkt) {
+        try {
+            final String weatherResponse = WEB_UTILS.HttpGet("https://api.darksky.net/forecast/" +
+                    CONFIGURATION_UTILS.getConfigValue("WEATHER_APIE_KEY") +
+                    "/27.4698,153.0251");
+            final float rainForecast = new JsonParser().parse(weatherResponse)
+                    .getAsJsonObject()
+                    .getAsJsonObject("currently")
+                    .get("precipProbability")
+                    .getAsFloat();
+            this.setRaining(rainForecast >= 0.5, blinkt);
+        } catch (final Exception ex) {
+            this.setRaining(false, blinkt);
+        }
     }
 
     @Override
@@ -153,7 +173,7 @@ public class SolarDisplay implements Display {
 
             /*
                 Any issues with the HTTP request are logged, and we return a blank string.
-                This will result in the blinking red light calculate.
+                This will result in the blinking red light calculateMinute.
              */
             System.err.println(DATE_FORMAT.format(new Date()) + " " + ex.toString());
             return "";

@@ -20,7 +20,12 @@ public class BinDayDisplay implements Display {
     }
 
     @Override
-    public void calculate(final Blinkt blinkt) {
+    public void calculateMinute(final Blinkt blinkt) {
+        calculateDay(blinkt);
+    }
+
+    @Override
+    public void calculateDay(Blinkt blinkt) {
         final DateTime now = new DateTime();
         blinkt.setPixel(7, 0, 0, 255);
         if (isRecyclingBinDay(now)) {
@@ -29,8 +34,8 @@ public class BinDayDisplay implements Display {
     }
 
     @Override
-    public void update(final Blinkt blink, final float delta) {
-        calculate(blink);
+    public void update(final Blinkt blinkt, final float delta) {
+        calculateDay(blinkt);
     }
 
     public boolean isRecyclingBinDay(final DateTime now) {

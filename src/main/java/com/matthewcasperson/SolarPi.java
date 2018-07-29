@@ -2,7 +2,6 @@ package com.matthewcasperson;
 
 import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.blinkt.impl.BlinktImpl;
-import com.matthewcasperson.blinkt.impl.NoOpBlinktImpl;
 import com.matthewcasperson.displays.Display;
 import com.matthewcasperson.displays.impl.BinDayDisplay;
 import com.matthewcasperson.displays.impl.SolarDisplay;
@@ -44,6 +43,13 @@ public class SolarPi {
             display.init(BLINKT);
         }
 
+        /*
+            Really shouldn't be relying on a daily restart here.
+         */
+        for(final Display display : DISPLAYS) {
+            display.calculateDay(BLINKT);
+        }
+
         while (true) {
             displayLoop();
             updateLoop();
@@ -52,7 +58,7 @@ public class SolarPi {
 
     private void displayLoop() {
         for(final Display display : DISPLAYS) {
-            display.calculate(BLINKT);
+            display.calculateMinute(BLINKT);
         }
         BLINKT.show();
     }
