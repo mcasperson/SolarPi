@@ -12,21 +12,26 @@ public class FuelImpl implements Fuel {
     private static final String URL = "https://api-01-04.motormouth.com.au/GetChartData?appToken=EE242BF3-7D54-4783-A1D9-DA1E0E403F17&userToken=&isFuelId=2&cityId=1";
 
     public boolean isGoodFuelDay() {
-        final String response = WEB_UTILS.HttpGet(URL);
-        final JsonArray predictions = new JsonParser().parse(response)
-                .getAsJsonObject()
-                .getAsJsonArray("Forecast");
+        try {
+            final String response = WEB_UTILS.HttpGet(URL);
+            final JsonArray predictions = new JsonParser().parse(response)
+                    .getAsJsonObject()
+                    .getAsJsonArray("Forecast");
 
-        DateTime smallestDate = null;
-        int smallestValue = 0;
-        for (int i = 0; i < predictions.size(); ++i) {
-            final DateTime date = DateTime.parse(predictions.get(i).getAsJsonObject().get("DateTimeLocal").getAsString());
-            if (smallestDate == null || date.isBefore(smallestDate)) {
-                smallestDate = date;
-                smallestValue = predictions.get(i).getAsJsonObject().get("Value").getAsInt();
+            DateTime smallestDate = null;
+            int smallestValue = 0;
+            for (int i = 0; i < predictions.size(); ++i) {
+                final DateTime date = DateTime.parse(predictions.get(i).getAsJsonObject().get("DateTimeLocal").getAsString());
+                if (smallestDate == null || date.isBefore(smallestDate)) {
+                    smallestDate = date;
+                    smallestValue = predictions.get(i).getAsJsonObject().get("Value").getAsInt();
+                }
             }
-        }
 
-        return smallestValue == 1;
+            return smallestValue == 1;
+        } catch (final Exception ex) {
+            System.err.println(ex);
+            return false;
+        }
     }
 }

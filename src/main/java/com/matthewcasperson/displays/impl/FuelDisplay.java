@@ -29,11 +29,7 @@ public class FuelDisplay implements Display {
 
     @Override
     public void calculateDay(final Blinkt blinkt) {
-        try {
-            setGoodFueldDay(FUEL.isGoodFuelDay());
-        } catch (final Exception ex) {
-            setGoodFueldDay(false);
-        }
+        setGoodFueldDay(FUEL.isGoodFuelDay());
     }
 
     @Override
