@@ -23,6 +23,7 @@ public class WeatherImpl implements Weather {
                     .getAsFloat();
             return rainForecast >= 0.5;
         } catch (final Exception ex) {
+            System.err.println(ex);
             return false;
         }
     }
