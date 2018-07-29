@@ -65,7 +65,7 @@ public class SolarDisplay implements Display {
     @Override
     public void update(final Blinkt blink, final float delta) {
         if (raining) {
-            for (int i = 2; i < 8; ++i) {
+            for (int i = 0; i < 6; ++i) {
                 RAIN_EFFECT.update(i, blink, delta);
             }
         }

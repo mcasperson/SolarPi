@@ -56,7 +56,7 @@ public class SolarPi {
         long last = start;
         while (System.currentTimeMillis() - start < REFRESH_PERIOD) {
             final long delta = System.currentTimeMillis() - last;
-            last = System.currentTimeMillis();
+            last += delta;
 
             // Limit the "frame rate"
             if (delta < MAX_FRAME_RATE) {
