@@ -1,10 +1,10 @@
 package com.matthewcasperson.blinkt;
 
 public class Pixel {
-    public int r;
-    public int g;
-    public int b;
-    public float brightness;
+    private int r;
+    private int g;
+    private int b;
+    private float brightness;
 
     public Pixel() {
 
@@ -21,5 +21,21 @@ public class Pixel {
         this.g = g;
         this.b = b;
         this.brightness = brightness;
+    }
+
+    public int getR() {
+        return r;
+    }
+
+    public int getG() {
+        return g;
+    }
+
+    public int getB() {
+        return b;
+    }
+
+    public float getBrightness() {
+        return brightness;
     }
 }

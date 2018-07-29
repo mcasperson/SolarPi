@@ -40,7 +40,8 @@ public class SolarDisplay implements Display {
     private static final String SOLAR_USER = "SOLAR_USER";
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
-    private static final RainEffect RAIN_EFFECT = new RainEffect(MAX_BRIGHTNESS, 10.0f);
+    private static final float RAIN_CYCLE_EFFECT_PERIOD = 10.0f;
+    private static final RainEffect RAIN_EFFECT = new RainEffect(MAX_BRIGHTNESS, RAIN_CYCLE_EFFECT_PERIOD);
     private int failureCount;
     private boolean raining = false;
     private Pixel lastResult = new Pixel();
@@ -102,7 +103,7 @@ public class SolarDisplay implements Display {
             System.out.println(" (ERROR)");
         }
 
-        blinkt.setAll(lastResult.r, lastResult.g, lastResult.b);
+        blinkt.setAll(lastResult.getR(), lastResult.getG(), lastResult.getB());
     }
 
 
