@@ -4,6 +4,7 @@ import com.matthewcasperson.blinkt.Blinkt;
 import com.matthewcasperson.blinkt.impl.BlinktImpl;
 import com.matthewcasperson.displays.Display;
 import com.matthewcasperson.displays.impl.BinDayDisplay;
+import com.matthewcasperson.displays.impl.FuelDisplay;
 import com.matthewcasperson.displays.impl.RainDisplay;
 import com.matthewcasperson.displays.impl.SolarDisplay;
 import com.matthewcasperson.utils.GeneralUtils;
@@ -22,7 +23,8 @@ public class SolarPi {
     private static final Display[] DISPLAYS = new Display[] {
             new SolarDisplay(),
             new BinDayDisplay(),
-            new RainDisplay()
+            new RainDisplay(),
+            new FuelDisplay()
     };
 
 
