@@ -18,7 +18,7 @@ public class SolarPi {
     private static final long MAX_FRAME_RATE = 50;
     private static final Blinkt BLINKT = new BlinktImpl();
     private static final Display[] DISPLAYS = new Display[] {
-            new SolarDisplay(),
+            new SolarDisplay(BLINKT),
             new BinDayDisplay()
     };
 
@@ -58,12 +58,12 @@ public class SolarPi {
             final long delta = System.currentTimeMillis() - last;
             last += delta;
 
-            // Limit the "frame rate"
+            // Limit the "frame rate". Probably redundant given how slow the
+            // updates are (around 0.7 seconds on average).
             if (delta < MAX_FRAME_RATE) {
                 GENERAL_UTILS.sleep(MAX_FRAME_RATE - delta);
             } else {
                 final long fixedDelta = Math.max(MAX_FRAME_RATE, delta);
-                System.out.println("Delta: " + fixedDelta);
 
                 for(final Display display : DISPLAYS) {
                     display.update(BLINKT, fixedDelta / 1000.0f);

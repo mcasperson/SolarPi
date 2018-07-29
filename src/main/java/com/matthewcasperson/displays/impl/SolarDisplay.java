@@ -40,9 +40,9 @@ public class SolarDisplay implements Display {
     private static final String SOLAR_USER = "SOLAR_USER";
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
-    private static final RainEffect RAIN_EFFECT = new RainEffect(MAX_BRIGHTNESS, 4.0f);
+    private static final RainEffect RAIN_EFFECT = new RainEffect(MAX_BRIGHTNESS, 10.0f);
     private int failureCount;
-    private boolean raining = true;
+    private boolean raining = false;
     private Pixel lastResult = new Pixel();
 
     private void setRaining(final boolean raining, final Blinkt blinkt) {
@@ -52,9 +52,17 @@ public class SolarDisplay implements Display {
                     blinkt.setPixel(i, (float)Math.random() * MAX_BRIGHTNESS);
                 }
             }
+        } else {
+            for (int i = 2; i < 8; ++i) {
+                blinkt.setPixel(i, MAX_BRIGHTNESS);
+            }
         }
 
         this.raining = raining;
+    }
+
+    public SolarDisplay(final Blinkt blinkt) {
+        setRaining(true, blinkt);
     }
 
     @Override
