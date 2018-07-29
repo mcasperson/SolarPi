@@ -15,7 +15,7 @@ public class WeatherImpl implements Weather {
         try {
             final String weatherResponse = WEB_UTILS.HttpGet("https://api.darksky.net/forecast/" +
                     CONFIGURATION_UTILS.getConfigValue("WEATHER_API_KEY") +
-                    "/27.4698,153.0251");
+                    "/27.2015,152.9655");
             final float rainForecast = new JsonParser().parse(weatherResponse)
                     .getAsJsonObject()
                     .getAsJsonObject("currently")
