@@ -18,7 +18,9 @@ public class WeatherImpl implements Weather {
                     "/27.2015,152.9655");
             final float rainForecast = new JsonParser().parse(weatherResponse)
                     .getAsJsonObject()
-                    .getAsJsonObject("currently")
+                    .getAsJsonArray("daily")
+                    .get(0)
+                    .getAsJsonObject()
                     .get("precipProbability")
                     .getAsFloat();
             return rainForecast >= 0.5;
