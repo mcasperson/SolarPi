@@ -20,7 +20,11 @@ public class SolarSystemImpl implements SolarSystem {
     private static final String SOLAR_PASS = "SOLAR_PASS";
     private static final String SOLAR_URL = "SOLAR_URL";
     private static final WebUtils WEB_UTILS = new WebUtilsImpl();
-    private static final int MAX_FAILURES = 3;
+    /**
+     * The solar system only updates every 5 minutes anywy, so allow a few concecutive failures
+     * before resorting to a restart.
+     */
+    private static final int MAX_FAILURES = 10;
     private int failureCount;
 
     /**
