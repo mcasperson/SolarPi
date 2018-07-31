@@ -20,7 +20,7 @@ public class WeatherImpl implements Weather {
         try {
             return RETRY.retry(new RetryCallback<Boolean, Exception>() {
                 @Override
-                public Boolean doWithRetry(RetryContext context) throws Exception {
+                public Boolean doWithRetry(final RetryContext context) throws Exception {
                     final String weatherResponse = WEB_UTILS.HttpGet("https://api.darksky.net/forecast/" +
                             CONFIGURATION_UTILS.getConfigValue("WEATHER_API_KEY") +
                             "/27.2015,152.9655");

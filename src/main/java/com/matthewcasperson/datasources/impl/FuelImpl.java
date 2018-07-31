@@ -20,7 +20,7 @@ public class FuelImpl implements Fuel {
         try {
             return RETRY.retry(new RetryCallback<Boolean, Exception>() {
                 @Override
-                public Boolean doWithRetry(RetryContext context) throws Exception {
+                public Boolean doWithRetry(final RetryContext context) throws Exception {
                     final String response = WEB_UTILS.HttpGet(URL);
                     final JsonArray predictions = new JsonParser().parse(response)
                             .getAsJsonObject()
