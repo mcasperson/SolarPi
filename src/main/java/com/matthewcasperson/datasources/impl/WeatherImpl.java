@@ -16,14 +16,12 @@ public class WeatherImpl implements Weather {
             final String weatherResponse = WEB_UTILS.HttpGet("https://api.darksky.net/forecast/" +
                     CONFIGURATION_UTILS.getConfigValue("WEATHER_API_KEY") +
                     "/27.2015,152.9655");
-            final float rainForecast = new JsonParser().parse(weatherResponse)
+            final String icon = new JsonParser().parse(weatherResponse)
                     .getAsJsonObject()
-                    .getAsJsonArray("daily")
-                    .get(0)
-                    .getAsJsonObject()
-                    .get("precipProbability")
-                    .getAsFloat();
-            return rainForecast >= 0.5;
+                    .getAsJsonObject("daily")
+                    .getAsJsonPrimitive("icon")
+                    .getAsString();
+            return "rain".equals(icon);
         } catch (final Exception ex) {
             System.err.println(ex);
             return false;
